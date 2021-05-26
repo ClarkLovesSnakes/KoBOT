@@ -1,0 +1,24 @@
+# The async gen command
+@bot.command(name = "gen")
+async def generate(ctx, type):
+    ######
+    #
+    # Asynchronous method to take an argument from the user to generate a random idea of that type, based on an extensive
+    # list of options
+    #
+    ######
+
+    if type == "insanity":
+        verbs = open("InsanityVerbs.txt", "r")
+        verbLines = verbs.readlines()
+        verbs.close()
+
+        nouns = open("InsanityNouns.txt", "r")
+        nounLines = nouns.readlines()
+        nouns.close()
+
+        index1 = random.randint(0, (len(verbLines)-1))
+        index2 = random.randint(0, (len(nounLines)-1))
+
+
+        await ctx.send(verbLines[index1].strip() + " " + nounLines[index2])

@@ -1,101 +1,101 @@
-1. Felicitous: This action is particularly fortunate or unfortunate for someone, and it grants you 1 positive crit point, in addition to any other crit points gained. Itís your lucky day!
-2. Mitosis: Someone or something has been replicated, or at least appears to have been. Now there's two of them. Now there's two of them.
-3. Split: Your action affects your targets, and at least one other target. The other probably isnít a literal target.
-4. Disassembled: Something is broken down into its pieces or component parts. Youíre tearing me apart!
+1. Felicitous: This action is particularly fortunate or unfortunate for someone, and it grants you 1 positive crit point, in addition to any other crit points gained. It‚Äôs your lucky day!
+2. Mitosis: Someone or something has been replicated, or at least appears to have been. Now there's two of them. Now there's two of them. 
+3. Split: Your action affects your targets, and at least one other target. The other probably isn‚Äôt a literal target. 
+4. Disassembled: Something is broken down into its pieces or component parts. You‚Äôre tearing me apart!
 5. Ultimatum: Your action puts a stop to something, likely for a while. No more throwing pastries in the house!
-6. Firmament: Something has now changed in hardness, softness, tightness, looseness, roughness, firmness, or rigidity. I donít suppose youíll let me off with a warning?
-7. Flashback: Your action has invoked a strong memory. Charlie was everywhere, he was so good at soccer.
+6. Firmament: Something has now changed in hardness, softness, tightness, looseness, roughness, firmness, or rigidity. I don‚Äôt suppose you‚Äôll let me off with a warning? 
+7. Flashback: Your action has invoked a strong memory. Charlie was everywhere, he was so good at soccer. 
 8. Verbose: This action involves a dialogue or monologue. Were you talking to me?
-9. Overtime: Something is taking more or less time than expected to end. Like your life.
+9. Overtime: Something is taking more or less time than expected to end. Like your life. 
 10. Tenfold: Your action is much more intense than was intended. Whoops.
 11. Growth: Something is larger now. I remember when you just came up to my knee.
-12. Groupthink: Some plural number of characters or entities have agreed on a course of action. Open your Action 101 books to page 30.
-13. Omen: Your action is unaffected, but a cliched foreshadowing symbol appears in the world or a vision. Quoth the raven, ìOverdone!î
-14. Lyrical: Someone is suddenly engaged in spoken or sung artistic expression. Sometimes it is song. Sometimes itís love poetry. Sometimes a haiku.
+12. Groupthink: Some plural number of characters or entities have agreed on a course of action. Open your Action 101 books to page 30. 
+13. Omen: Your action is unaffected, but a cliched foreshadowing symbol appears in the world or a vision. Quoth the raven, ‚ÄúOverdone!‚Äù
+14. Lyrical: Someone is suddenly engaged in spoken or sung artistic expression. Sometimes it is song. Sometimes it‚Äôs love poetry. Sometimes a haiku.
 15. Propulsion: Your action moved things around. Weeee!
-16. Melding: Two or more things, physical or not, are now inseparable and indistinguishable for some period of time. Clearly theyíve grown attached.
+16. Melding: Two or more things, physical or not, are now inseparable and indistinguishable for some period of time. Clearly they‚Äôve grown attached.
 17. Cactus: Cactus
 18. Gatekept: Something is now more or less freely accessible. Stupid closed on Sundays...
 19. Turncoat: The motives of some party are revealed, obfuscated, or altered. Or at least they appear to be...
-20. Saturated: Thereís an amount of liquid somewhere. Donít drink the copyright-neutral fruit-powder beverage.
+20. Saturated: There‚Äôs an amount of liquid somewhere. Don‚Äôt drink the copyright-neutral fruit-powder beverage. 
 21. Gravitos: Your action pulled things towards you, maybe just the attention of others. That darned je ne sais quoi!
 22. Indecision: Some party must now make a difficult choice of varying importance. Do I want infinite wealth, or to be pummeled by rocks?
 23. Under the Weather: Something is falling from the sky en masse. Who knows, it might be umbrellas.
 24. Scentillating: An odor, noxious or fragrant, appears or is noticed. He who smelt it...
-25. Foresight: Take a different action, keeping the roll that gave you this quirk. I donít know why, but I have a feeling I should try something else.
+25. Foresight: Take a different action, keeping the roll that gave you this quirk. I don‚Äôt know why, but I have a feeling I should try something else.
 26. The Floor Is: Some part of the terrain is now something different. Best try to stay above it all.
-27. Vanish: Some object or person has been lost or disappeared without a trace. Ok, maybe thereís one trace.
-28. Field Promotion: Someone has realized they have a new task to accomplish, or a new duty to fulfill. One might call it a hazard occupation.
+27. Vanish: Some object or person has been lost or disappeared without a trace. Ok, maybe there‚Äôs one trace. 
+28. Field Promotion: Someone has realized they have a new task to accomplish, or a new duty to fulfill. One might call it a hazard occupation. 
 29. Vassal: Your action was actually performed by someone else. Stop projecting!
-30. Chilling: Your action caused a decrease in activity of some sort. Is it getting cold? Time to snuggle down.
-31. Goodbye: Someone has given up something, probably of import to them. I S T H I S L O S S ? Goodbye.
+30. Chilling: Your action caused a decrease in activity of some sort. Is it getting cold? Time to snuggle down. 
+31. Goodbye: Someone has given up something, probably of import to them. I S T H I S L O S S ? Goodbye. 
 32. Minimalism: Something is now considerably smaller. Honey, I shrunk the goats.
-33. Woke: Some number of Characters now believe something to be false. I donít even know anymore.
+33. Woke: Some number of Characters now believe something to be false. I don‚Äôt even know anymore.
 34. Makeover: Someone or something has changed appearances, in a way that usually involves removing an amount of non-natural covering. That hat is pretty snazzy!
 35. Ocblock: Your action caused some form of pervasive visual obstruction for someone. Or maybe the flashlight just ran out of batteries.
 36. Deus Ex: Some powerful entity does you a favor. Terms and conditions may apply.
-37. Enveloped: Something is now surrounded by something else. Better watch out for tentacle monsters.
-38. Symbiosis: Something is now dependent on another, and this might be mutual. You bring the sodas, you get the napkins, and you bring the Venetian silk prayer shawls.
+37. Enveloped: Something is now surrounded by something else. Better watch out for tentacle monsters. 
+38. Symbiosis: Something is now dependent on another, and this might be mutual. You bring the sodas, you get the napkins, and you bring the Venetian silk prayer shawls. 
 39. Neglect: The efficacy of your action was not determined by any real current merit on your part, but by the failures of another, or your past self.
-40. Earthen: Something is a rock now. Or thereís a new metallic object noticed in the area. Or, at the very least, somethingís out of the crystal closet. Theyíre minerals Mary!
-41. Spent: Some resource is partially or wholly used up. ìI used up quarks in my physics project! Not what I meant, Johnny!î
-42. Elixir: Your action is a critical point on someoneís quest for something. Finally, I understand, itís been cactus the whole time!
+40. Earthen: Something is a rock now. Or there‚Äôs a new metallic object noticed in the area. Or, at the very least, something‚Äôs out of the crystal closet. They‚Äôre minerals Mary! 
+41. Spent: Some resource is partially or wholly used up. ‚ÄúI used up quarks in my physics project! Not what I meant, Johnny!‚Äù
+42. Elixir: Your action is a critical point on someone‚Äôs quest for something. Finally, I understand, it‚Äôs been cactus the whole time!
 43. Call to Arms: New parties are involved in or relevant to the action. Birthday hats will be distributed as needed.
 44. Tree-hugged: The natural world has picked a side, at least for now. The Bushes are going to War!
 45. Restraint: Someone or something has its ability to move noticeably inhibited. Pick your feet up!
-46. Reaction: Two or more objects in proximity have an interesting, unexpected, or violent interaction. We just hit it off.
-47. Elsewhere: Some location, other than where you are now, has become relevant. Man, I could really go for some Mexican. Aww, I want Goblin.
+46. Reaction: Two or more objects in proximity have an interesting, unexpected, or violent interaction. We just hit it off. 
+47. Elsewhere: Some location, other than where you are now, has become relevant. Man, I could really go for some Mexican. Aww, I want Goblin. 
 48. Racket: Sound or noise is coming from somewhere, possibly in an unexpected manner. You hear that?
 49. Craving: Your Character is now compelled to do something, perhaps habitually or obsessively, with a variable degree of intensity. Chug! Chug! Chug!
-50. Fourth Window: A Character gains some amount of meta knowledge or knowledge of something they couldnít have known otherwise. By the way, just so you know, your Player rolled 50.
+50. Fourth Window: A Character gains some amount of meta knowledge or knowledge of something they couldn‚Äôt have known otherwise. By the way, just so you know, your Player rolled 50. 
 51.  Purge: Something is cleansed or purified of something else. Looks like you cleansed that grunt of his flesh.
 52. Subjugate: Something is following the instructions of something else. Grow a spine! Yes sir...
-53. Secession: Some Characters pause and are removed or remove themselves from the action. Fighters, to your corners.
+53. Secession: Some Characters pause and are removed or remove themselves from the action. Fighters, to your corners.  
 54. Edifice: A new structure has appeared or been noticed in the area. I can see my house from here?
 55. Ambiguous: The gist of your action seems to have occurred at some point, but when it was done is up for grabs.
-56. Ambiance: The vibe or feel of something or someone has changed. Look, I know the vase is covered in blood, but putting our money in it just seems right.
-57. Tick Tock: Some number of Characters have an altered perception of time, like in the DMV.
+56. Ambiance: The vibe or feel of something or someone has changed. Look, I know the vase is covered in blood, but putting our money in it just seems right. 
+57. Tick Tock: Some number of Characters have an altered perception of time, like in the DMV. 
 58. Inconceivable: Something is here that definitely should not be, or happening that cannot be. Andre, why are you here?
-59. Niche: An obscure interest or passion of someone is revealed. Donít touch Lokiís toenail collection!
-60. Spontaneous Combustion: Fire, or some other sort of plasma, is involved. It may be lit under someone, or wrecking the library. Ahh, thatís hot.
-61. Scrappy: Some new objects or tools have entered the fray. Thereís sword in them thar hills!
-62. Repulsive: Something is now avoiding something else, socially or physically, and the feeling may be mutual. We will never, ever, ever be in proximity again.
+59. Niche: An obscure interest or passion of someone is revealed. Don‚Äôt touch Loki‚Äôs toenail collection!
+60. Spontaneous Combustion: Fire, or some other sort of plasma, is involved. It may be lit under someone, or wrecking the library. Ahh, that‚Äôs hot.
+61. Scrappy: Some new objects or tools have entered the fray. There‚Äôs sword in them thar hills!
+62. Repulsive: Something is now avoiding something else, socially or physically, and the feeling may be mutual. We will never, ever, ever be in proximity again. 
 63. Bearpoke: Something previously thought in slumber, stasis, or inanimacy is now shown to be more energetic. Cat naps are not to be trusted.
-64. Square: Your action is unusually mechanical, being precise or focused in unnatural ways. Hope it wasnít a captcha.
-65. Gyrations: Some Character has rather lost control of their body, as it seems to move on itís own. Or they just like dancing.
-66. Fatality: Someone or something dies. RIP in peace in pieces.
+64. Square: Your action is unusually mechanical, being precise or focused in unnatural ways. Hope it wasn‚Äôt a captcha. 
+65. Gyrations: Some Character has rather lost control of their body, as it seems to move on it‚Äôs own. Or they just like dancing.
+66. Fatality: Someone or something dies. RIP in peace in pieces. 
 67. Sticky Fingers: Some object has changed hands, perhaps for a price. Pick a pocket, any pocket.
-68. Insurrection: Someone or something is now functioning differently than intended, expected, or instructed, potentially out of spite. Stupid belt, wonít stay buckled.
-69.  Inversion: Something is now backwards. Or inside out. Or upside down. Or downside up.
+68. Insurrection: Someone or something is now functioning differently than intended, expected, or instructed, potentially out of spite. Stupid belt, won‚Äôt stay buckled. 
+69.  Inversion: Something is now backwards. Or inside out. Or upside down. Or downside up. 
 70. Volatile: Your action revealed or created a lot of energy. The cookies are always somewhere...
-71. Over the Top: Some obstacle has proven easier or harder to surmount than expected. We should have made a bigger moat.
-72. Moniker: Your action will result in a nickname for your Character. That nickname might just be ìidiot.î
+71. Over the Top: Some obstacle has proven easier or harder to surmount than expected. We should have made a bigger moat. 
+72. Moniker: Your action will result in a nickname for your Character. That nickname might just be ‚Äúidiot.‚Äù
 73. Klutztastrophe: Your action resulted in an unintended, related series of events. Eat your heart out, Rube!
-74. Stoic: Something is revealed to be unaffected by or unaware of something else. Oh no, Iím immune to flavor!
+74. Stoic: Something is revealed to be unaffected by or unaware of something else. Oh no, I‚Äôm immune to flavor!
 75. Whims of Fate: Reroll this action. Alea iacta iterum est.
-76. Observation: A minute detail of variable significance and/or accuracy is noticed. Thatís shamrock green, not emerald!
-77. Razzle-Dazzle: Your action is now very flashy, in ways that most likely do not increase its efficacy. I donít think the back-up jugglers were necessary.
-78. Ancestry: Aspects of some Character such as genealogy, presentation, or family history become relevant. I donít trust him. Why? His shadowís too thin, he must be half vampire.
+76. Observation: A minute detail of variable significance and/or accuracy is noticed. That‚Äôs shamrock green, not emerald! 
+77. Razzle-Dazzle: Your action is now very flashy, in ways that most likely do not increase its efficacy. I don‚Äôt think the back-up jugglers were necessary.
+78. Ancestry: Aspects of some Character such as genealogy, presentation, or family history become relevant. I don‚Äôt trust him. Why? His shadow‚Äôs too thin, he must be half vampire.
 79. Plagiarist: You decide to alter your action to more closely model the action of another, and perhaps someone else might copy it in the future. Cite your swords.
 80. Bluster: The air around you has shifted, perhaps in composition. Wait, what happened to the canary?
 81. Homeostasis: Some bodily functions need tending to. Like maybe your heartbeat.
 82. Optimize: Some nearby mechanism or system has been altered, and that might just cause friction in your cogs.
-83. Recalibrating: As you perform your action, it is taken in a new direction, literally.
+83. Recalibrating: As you perform your action, it is taken in a new direction, literally. 
 84. Hallowed: Something is revealed to be of vast importance, religiously or otherwise. How dare you use the fabled Gilded Handkerchief of Saint Karklton to wipe your brow sweat, and on the day of his feast!
-85. Hysteria: Someone has been filled with intense, raw emotion, and their action will be thusly affected.
-86. Impulse: Some Character takes action without thinking. It was a heated gaming moment.
-87. Vile: Your action resulted in some sort of clutter, mess, or pervasive nastiness. Itís what happens when you drop-kick trash cans.
+85. Hysteria: Someone has been filled with intense, raw emotion, and their action will be thusly affected. 
+86. Impulse: Some Character takes an action without thinking. It was a heated gaming moment.
+87. Vile: Your action resulted in some sort of clutter, mess, or pervasive nastiness. It‚Äôs what happens when you drop-kick trash cans. 
 88. Glamourous: Some set of Characters are perceiving things as they are not. Beware the plurmple galooterflies.
-89. Meta: Your action calls attention to something from the game world that matches real life, i. e. a sound in game from a real life source, or an inside joke with your group. See the world through prose-colored glasses.
+89. Meta: Your action calls attention to something from the game world that matches real life, i. e. a sound in game from a real life source, or an inside joke with your group. See the world through prose-colored glasses. 
 90. Illuminated: Something is bright and easily noticeable, either figuratively or literally. This thing may or may not be pertinent to the current issues.
-91. Nuisance: Someone is now distracted by a minor annoyance, such as a ticking, itching, or flickering. Hold on a minute, thereís a boot in my snake.
-92. Gobbledygook: Exchange of information, communication, or understanding is altered or affected unpredictably. ìPass the garden.î ìThatís incredibly inappropriate!î
-93. Civil: The viewpoints, morals, or feelings of some number of Characters are taken into account and respected or disrespected as this action occurs, and perhaps their relationships are affected. îIím sorry, did I offend you?î ìYouíre uninvited to my birthday party.î
-94. Middle Distance: Some number of Characters begin longing wistfully for something. Wish you werenít here.
+91. Nuisance: Someone is now distracted by a minor annoyance, such as a ticking, itching, or flickering. Hold on a minute, there‚Äôs a boot in my snake.
+92. Gobbledygook: Exchange of information, communication, or understanding is altered or affected unpredictably. ‚ÄúPass the garden.‚Äù ‚ÄúThat‚Äôs incredibly inappropriate!‚Äù
+93. Civil: The viewpoints, morals, or feelings of some number of Characters are taken into account and respected or disrespected as this action occurs, and perhaps their relationships are affected. ‚ÄùI‚Äôm sorry, did I offend you?‚Äù ‚ÄúYou‚Äôre uninvited to my birthday party.‚Äù
+94. Middle Distance: Some number of Characters begin longing wistfully for something. Wish you weren‚Äôt here.
 95. Yore: Your action is noted by someone, and they find it significant. It may be recounted for generations to come.
 96. Amnesia: Some Character has forgotten something, maybe everything. What quirk is this?
 97. Wild Idea: Something occurs to a Character, seemingly without cause. Oh the voice in my head? His name's Brandon.
 98. Adaptation: Some number of things are changed so that a Character may better or worse suit an environment. Finally got my new prescription!
 99. Thesaurus: One or more of the keywords of your action is replaced with a synonym or homonym that alters the action significantly. I wanted to roast the bandits, but I just warmed them instead.
-100. Dud: Your action proceeds quirkless, so much so that it probably wonít be remembered at all.
+100. Dud: Your action proceeds quirkless, so much so that it probably won‚Äôt be remembered at all. 
 101. Magenta: How did you get this quirk? Are you haxxor? Get outta my game!
