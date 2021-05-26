@@ -20,11 +20,11 @@ async def main():
     global usedQuirks
 
     # Open the quirk document, populate the global array, and close the document
-    with open("C:\\Users\\Clark\\Documents\\Git Repos\\KoBOT\\Quirks.txt", "r", encoding="utf-8") as quirks:
+    with open("/home/clark/Documents/dev/Python/KoBOT/Quirks.txt", "r", encoding="utf-8") as quirks:
         quirkLines = quirks.readlines()
 
     # Populate the usedQuirks array, every time a quirk is requested
-    with open("C:\\Users\\Clark\\Documents\\Git Repos\\KoBOT\\UsedQuirks.txt", "r", encoding="utf-8") as usedQuirksTxt:
+    with open("/home/clark/Documents/dev/Python/KoBOT/UsedQuirks.txt", "r", encoding="utf-8") as usedQuirksTxt:
         usedQuirks = usedQuirksTxt.readline().split(" ")
 
     # Remove empty strings in usedQuirks
@@ -33,7 +33,7 @@ async def main():
             del usedQuirks[i]
 
     # Get the token out of the secret token doc
-    with open("C:\\Users\\Clark\\Documents\\Git Repos\\KoBOT\\Token.txt", "r", encoding="utf-8") as tokenDoc:
+    with open("/home/clark/Documents/dev/Python/KoBOT/Token.txt", "r", encoding="utf-8") as tokenDoc:
         TOKEN = tokenDoc.readline()
 
     # Run the bot
@@ -82,7 +82,7 @@ def quirk(index = None):
             del usedQuirks[0]
 
         try:
-            with open("C:\\Users\\Clark\\Documents\\Git Repos\\KoBOT\\test.txt", "w+") as usedQuirksTxt:
+            with open("/home/clark/Documents/dev/Python/KoBOT/UsedQuirks.txt", "w") as usedQuirksTxt:
                 storageString = ""
                 for i in range(len(usedQuirks)):
                     if i == MAX_QUIRK_REPEAT_TIME - 1:
@@ -246,10 +246,11 @@ async def multiquirk(ctx, number):
         await ctx.send("Multiquirk Number must be some positive integer. Please enter a valid number.")
         return
     else:
-        for i in range(int(number)):
+        for _ in range(number):
             output = quirk(None)
             await ctx.send(output)
-            return
+            
+        return
 
 
 @bot.event
