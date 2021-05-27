@@ -1,9 +1,7 @@
-from typing import Any
 import discord
 from discord.ext import commands
 import asyncio
 import random
-from sys import exit
 
 #Globals and Constants
 MAX_QUIRK_REPEAT_TIME = 20
