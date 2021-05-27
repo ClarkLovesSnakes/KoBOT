@@ -20,7 +20,6 @@ async def main():
     global usedQuirks
 
     # Open the quirk document, populate the global array, and close the document
-    #with open("/home/clark/Documents/dev/Python/KoBOT/Quirks.txt", "r", encoding="utf-8") as quirks:
     with open("Quirks.txt", "r", encoding = "utf-8") as quirks:
         quirkLines = quirks.readlines()
 
