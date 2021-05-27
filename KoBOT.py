@@ -20,11 +20,12 @@ async def main():
     global usedQuirks
 
     # Open the quirk document, populate the global array, and close the document
-    with open("/home/clark/Documents/dev/Python/KoBOT/Quirks.txt", "r", encoding="utf-8") as quirks:
+    #with open("/home/clark/Documents/dev/Python/KoBOT/Quirks.txt", "r", encoding="utf-8") as quirks:
+    with open("Quirks.txt", "r", encoding = "utf-8") as quirks:
         quirkLines = quirks.readlines()
 
     # Populate the usedQuirks array, every time a quirk is requested
-    with open("/home/clark/Documents/dev/Python/KoBOT/UsedQuirks.txt", "r", encoding="utf-8") as usedQuirksTxt:
+    with open("UsedQuirks.txt", "r", encoding="utf-8") as usedQuirksTxt:
         usedQuirks = usedQuirksTxt.readline().split(" ")
 
     # Remove empty strings in usedQuirks
@@ -33,11 +34,20 @@ async def main():
             del usedQuirks[i]
 
     # Get the token out of the secret token doc
-    with open("/home/clark/Documents/dev/Python/KoBOT/Token.txt", "r", encoding="utf-8") as tokenDoc:
+    with open("Token.txt", "r", encoding="utf-8") as tokenDoc:
         TOKEN = tokenDoc.readline()
 
     # Run the bot
     await bot.start(TOKEN)
+
+    with open("UsedQuirks.txt", "w") as usedQuirksTxt:
+        storageString = ""
+        for i in range(len(usedQuirks)):
+            if i == MAX_QUIRK_REPEAT_TIME - 1:
+                storageString += str(usedQuirks[i])
+            else:
+                storageString += str(usedQuirks[i]) + " "
+        usedQuirksTxt.write(storageString)
 
     return
 
@@ -80,18 +90,6 @@ def quirk(index = None):
         # If more than the maximum quirks are on the list, delete the oldest entries until it is at the maximum
         while(len(usedQuirks) > MAX_QUIRK_REPEAT_TIME):
             del usedQuirks[0]
-
-        try:
-            with open("/home/clark/Documents/dev/Python/KoBOT/UsedQuirks.txt", "w") as usedQuirksTxt:
-                storageString = ""
-                for i in range(len(usedQuirks)):
-                    if i == MAX_QUIRK_REPEAT_TIME - 1:
-                        storageString += str(usedQuirks[i])
-                    else:
-                        storageString += str(usedQuirks[i]) + " "
-                usedQuirksTxt.write(storageString)
-        except Exception as e:
-            print(e)
 
     # Send the output
     return quirkLines[index]
