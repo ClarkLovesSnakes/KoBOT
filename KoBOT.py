@@ -4,9 +4,8 @@ import asyncio
 import random
 
 #Globals and Constants
-MAX_QUIRK_REPEAT_TIME = 20
+MAX_QUIRKS = 20
 quirkLines = []
-usedQuirks = []
 
 # Instantiate the bot, give it the command prefix
 bot = discord.ext.commands.Bot(command_prefix = "!")
@@ -15,20 +14,10 @@ async def main():
     """main() driver function, takes no arguments, returns nothing. Instantiates global arrays, opens secret token file, runs bot based on this token."""
 
     global quirkLines
-    global usedQuirks
 
     # Open the quirk document, populate the global array, and close the document
     with open("Quirks.txt", "r", encoding = "utf-8") as quirks:
         quirkLines = quirks.readlines()
-
-    # Populate the usedQuirks array, every time a quirk is requested
-    with open("UsedQuirks.txt", "r", encoding="utf-8") as usedQuirksTxt:
-        usedQuirks = usedQuirksTxt.readline().split(" ")
-
-    # Remove empty strings in usedQuirks
-    for i in range(len(usedQuirks) -1, 0, -1):
-        if usedQuirks[i] == "":
-            del usedQuirks[i]
 
     # Get the token out of the secret token doc
     with open("Token.txt", "r", encoding="utf-8") as tokenDoc:
@@ -36,15 +25,6 @@ async def main():
 
     # Run the bot
     await bot.start(TOKEN)
-
-    with open("UsedQuirks.txt", "w") as usedQuirksTxt:
-        storageString = ""
-        for i in range(len(usedQuirks)):
-            if i == MAX_QUIRK_REPEAT_TIME - 1:
-                storageString += str(usedQuirks[i])
-            else:
-                storageString += str(usedQuirks[i]) + " "
-        usedQuirksTxt.write(storageString)
 
     return
 
@@ -71,7 +51,7 @@ def quirk(index = None):
     """quirk() takes one optional argument, an integer called index. Returns the quirk at that index, or a random one if no index is specified."""
 
     global quirkLines
-    global usedQuirks
+    usedQuirks = []
 
     # If no index is requested, select a random one
     if index is None:
@@ -85,7 +65,7 @@ def quirk(index = None):
         usedQuirks.append(index)
 
         # If more than the maximum quirks are on the list, delete the oldest entries until it is at the maximum
-        while(len(usedQuirks) > MAX_QUIRK_REPEAT_TIME):
+        while(len(usedQuirks) > MAX_QUIRKS):
             del usedQuirks[0]
 
     # Send the output
