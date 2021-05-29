@@ -18,9 +18,6 @@ bot = discord.ext.commands.Bot(command_prefix = "!")
 async def main():
     """main() driver function, takes no arguments, returns nothing. Instantiates global arrays, opens secret token file, runs bot based on this token."""
 
-    with open("test.txt", "w+") as test:
-        test.write("testing 123")
-
     global quirkLines
     global charsToNumbers
 
@@ -34,7 +31,9 @@ async def main():
         for line in charLines:
             charsToNumbers[line.split(" ")[0]] = line.split(" ")[1:]
 
+    # Delete the trailing newline in each value list
     for key in charsToNumbers:
+        del charsToNumbers[key][-1]
         print(key, charsToNumbers[key])
 
     # Get the token out of the secret token doc
@@ -113,40 +112,43 @@ def dice_roll(dice, id, modifier = None):
         base = int(base)
 
         # Determine if the roll was natural, and get the correct quirk and points if it is a crit
+        isTwenty = dice == 20
         natural = (base == dice) or (base == 1)
         if roll >= dice:
-            output += crit(natural)
+            output += crit(natural, isTwenty)
 
         elif roll <= 1:
-            output += fail(natural)
+            output += fail(natural, isTwenty)
 
-        elif roll in charsToNumbers[playersToChars[id]] or base in charsToNumbers[playersToChars[id]]:
+        elif (roll in charsToNumbers[playersToChars[id]] or base in charsToNumbers[playersToChars[id]]) and isTwenty:
             output += "\n***Lucky Number!***"
             output += ("\n" + quirk())
 
     return output
 
 
-def crit(natural):
+def crit(natural, isTwenty):
     """crit() takes one argument, a boolean called natural. It returns a quirk and points string"""
 
     output = "\n***Critical Success!***"
-    output += ("\n" + quirk())
-    if natural:
-        output += "You gained three **(3)** Positive Crit Points from a Natural Critical Success. Apply them as you wish or store them in your pool."
-        return output
-    output += "You gained two **(2)** Positive Crit Points. Apply them as you wish or store them in your pool."
+    if isTwenty:
+        output += ("\n" + quirk())
+        if natural:
+            output += "You gained three **(3)** Positive Crit Points from a Natural Critical Success. Apply them as you wish or store them in your pool."
+            return output
+        output += "You gained two **(2)** Positive Crit Points. Apply them as you wish or store them in your pool."
     return output
 
-def fail(natural):
+def fail(natural, isTwenty):
     """fail() takes one argument, a boolean called natural. It returns a quirk and points string"""
 
     output = "\n***Critical Failure!***"
-    output += ("\n" + quirk())
-    if natural:
-        output += "You gained three **(3)** Negative Crit Points from a Natural Critical Failure. Unless otherwise instructed, please apply them now."
-        return output
-    output += "You gained two **(2)** Negative Crit Points. Unless otherwise instructed, please apply them now."
+    if isTwenty:
+        output += ("\n" + quirk())
+        if natural:
+            output += "You gained three **(3)** Negative Crit Points from a Natural Critical Failure. Unless otherwise instructed, please apply them now."
+            return output
+        output += "You gained two **(2)** Negative Crit Points. Unless otherwise instructed, please apply them now."
     return output
 
 
@@ -279,9 +281,16 @@ async def selectChar(ctx, character):
     global playersToChars
     global charstoNumbers
 
-    if character not in charsToNumbers:
-        await ctx.send("The character " + character + " does not exist. Consider creating them.")
-        return
+    if character != "None":
+
+        if character not in charsToNumbers:
+            await ctx.send("The character " + character + " does not exist. Consider creating them.")
+            return
+
+        for player in playersToChars:
+            if playersToChars[player] == character:
+                await ctx.send("The character " + character + " is already being played!")
+                return
 
     if ctx.author.id in playersToChars:
         await ctx.send(str(ctx.author.name) + " is no longer playing " + playersToChars[ctx.author.id])
@@ -321,8 +330,9 @@ async def createChar(ctx, character, *args):
         chars.write(character)
         chars.write(" ")
         for n in luckyNums:
-            chars.write(n)
+            chars.write(str(n))
             chars.write(" ")
+        chars.write("\n")
 
     await ctx.send("Character " + character + " has been created with Lucky Numbers " + str(luckyNums))
     return
@@ -333,6 +343,47 @@ async def query(ctx):
     global playersToChars
 
     await ctx.send(ctx.message.author.name + " is playing " + playersToChars[ctx.message.author.id])
+    return
+
+@bot.command(name = "delete")
+async def delete(ctx, character):
+    global playersToChars
+    global charsToNumbers
+
+    if(character == "None"):
+        await ctx.send("You cannot Delete \"None.\" They are too powerful!")
+        return
+
+    for key in playersToChars:
+        if playersToChars[key] == character:
+            playersToChars[key] = "None"
+            break
+
+    del charsToNumbers[character]
+
+    with open("Characters.txt", "w") as chars:
+        for char in charsToNumbers:
+            chars.write(char)
+            chars.write(" ")
+            for n in charsToNumbers[char]:
+                chars.write(str(n))
+                chars.write(" ")
+            chars.write("\n")
+    
+    await ctx.send(character + " has been deleted!")
+    return
+
+
+@bot.command(name = "list")
+async def list(ctx):
+    global playersToChars
+    global charsToNumbers
+
+    await ctx.send("List of current characters:\n")
+    for character in charsToNumbers:
+        if character != "None":
+            await ctx.send(character)
+
     return
 
 
