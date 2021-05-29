@@ -106,16 +106,18 @@ def dice_roll(dice, id, modifier = None):
             output += "\n" + str(roll)
 
     if not(dnd):
+        
+        base = int(base)
 
         # Determine if the roll was natural, and get the correct quirk and points if it is a crit
-        natural = (int(base) == dice) or (int(base) == 1)
+        natural = (base == dice) or (base == 1)
         if roll >= dice:
             output += crit(natural)
 
         elif roll <= 1:
             output += fail(natural)
 
-        elif roll in charsToNumbers[playersToChars[id]] or int(base) in charsToNumbers[playersToChars[id]]:
+        elif roll in charsToNumbers[playersToChars[id]] or base in charsToNumbers[playersToChars[id]]:
             output += "\n***Lucky Number!***"
             output += ("\n" + quirk())
 
