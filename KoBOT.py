@@ -10,7 +10,7 @@ usedQuirks = []
 dnd = False
 playersToChars = {}
 charsToNumbers = {}
-charsToNumbers["None"] = []
+charsToNumbers["Other"] = []
 
 # Instantiate the bot, give it the command prefix
 bot = discord.ext.commands.Bot(command_prefix = "!")
@@ -29,11 +29,18 @@ async def main():
     with open("Characters.txt", "r", encoding = "utf-8") as characters:
         charLines = characters.readlines()
         for line in charLines:
-            charsToNumbers[line.split(" ")[0]] = line.split(" ")[1:]
+            line = line.strip()
+            char = line.split("|")
+            try:
+                luckyNums = char[1].split(" ")
+            except IndexError:
+                continue
+            for i in range(len(luckyNums)):
+                luckyNums[i] = int(luckyNums[i])
+                    
+            charsToNumbers[char[0]] = luckyNums
 
-    # Delete the trailing newline in each value list
     for key in charsToNumbers:
-        del charsToNumbers[key][-1]
         print(key, charsToNumbers[key])
 
     # Get the token out of the secret token doc
@@ -42,7 +49,6 @@ async def main():
 
     # Run the bot
     await bot.start(TOKEN)
-
     return
 
 
@@ -121,6 +127,7 @@ def dice_roll(dice, id, modifier = None):
             output += fail(natural, isTwenty)
 
         elif (roll in charsToNumbers[playersToChars[id]] or base in charsToNumbers[playersToChars[id]]) and isTwenty:
+            print("test")
             output += "\n***Lucky Number!***"
             output += ("\n" + quirk())
 
@@ -270,7 +277,7 @@ async def multiquirk(ctx, number):
 @bot.command(name = "join")
 async def joinPlayer(ctx):
     # Players must join the game to play
-    playersToChars[ctx.author.id] = "None"
+    playersToChars[ctx.author.id] = "Other"
     await ctx.send(ctx.author.name + " has joined the game!")
     return
 
@@ -281,7 +288,7 @@ async def selectChar(ctx, character):
     global playersToChars
     global charstoNumbers
 
-    if character != "None":
+    if character != "Other":
 
         if character not in charsToNumbers:
             await ctx.send("The character " + character + " does not exist. Consider creating them.")
@@ -328,7 +335,7 @@ async def createChar(ctx, character, *args):
 
     with open("Characters.txt", "a") as chars:
         chars.write(character)
-        chars.write(" ")
+        chars.write("|")
         for n in luckyNums:
             chars.write(str(n))
             chars.write(" ")
@@ -350,13 +357,13 @@ async def delete(ctx, character):
     global playersToChars
     global charsToNumbers
 
-    if(character == "None"):
-        await ctx.send("You cannot Delete \"None.\" They are too powerful!")
+    if(character == "Other"):
+        await ctx.send("You cannot Delete \"Other.\" They are too powerful!")
         return
 
     for key in playersToChars:
         if playersToChars[key] == character:
-            playersToChars[key] = "None"
+            playersToChars[key] = "Other"
             break
 
     del charsToNumbers[character]
@@ -381,7 +388,7 @@ async def list(ctx):
 
     await ctx.send("List of current characters:\n")
     for character in charsToNumbers:
-        if character != "None":
+        if character != "Other":
             await ctx.send(character)
 
     return
