@@ -6,6 +6,8 @@ import random
 #Globals and Constants
 MAX_QUIRKS = 20
 quirkLines = []
+usedQuirks = []
+dnd = False
 
 # Instantiate the bot, give it the command prefix
 bot = discord.ext.commands.Bot(command_prefix = "!")
@@ -51,13 +53,13 @@ def quirk(index = None):
     """quirk() takes one optional argument, an integer called index. Returns the quirk at that index, or a random one if no index is specified."""
 
     global quirkLines
-    usedQuirks = []
+    global usedQuirks
 
     # If no index is requested, select a random one
     if index is None:
         index = random.randint(0, 99)
 
-        #Check that the quirk hasn't been seen recently
+        '''#Check that the quirk hasn't been seen recently
         while(str(index) in usedQuirks):
             index = random.randint(0, 99)
 
@@ -66,7 +68,7 @@ def quirk(index = None):
 
         # If more than the maximum quirks are on the list, delete the oldest entries until it is at the maximum
         while(len(usedQuirks) > MAX_QUIRKS):
-            del usedQuirks[0]
+            del usedQuirks[0]'''
 
     # Send the output
     return quirkLines[index]
@@ -75,6 +77,8 @@ def quirk(index = None):
 # The dice-rolling function
 def dice_roll(dice, modifier = None):
     """dice_roll() takes two argumetns, dice and modifier. Dice is an integer, and  modifier is either None or an integer. It returns a dice roll result."""
+
+    global dnd
 
     # Parse the integer value of dice and get the random roll, store that base value
     output = ""
@@ -90,20 +94,22 @@ def dice_roll(dice, modifier = None):
         elif modifier <= -1:
             output += (base + " - " + str(modifier)[1:]) # strip the negative sign off of the modifier
 
-        # If the dice was a natural, and the modifier would remove it from that natural state, ignore it, otherwise add it.
-        if (roll >= dice and modifier <= -1) or (roll <= 1 and modifier >= 1):
+        if not(dnd) and ((roll >= dice and modifier <= -1) or (roll <= 1 and modifier >= 1)):
             output += "\n" + base
+        
         else:
             roll += modifier
             output += "\n" + str(roll)
 
-    # Determine if the roll was natural, and get the correct quirk and points if it is a crit
-    natural = (int(base) == dice) or (int(base) == 1)
-    if roll >= dice:
-        output += crit(natural)
+    if not(dnd):
 
-    elif roll <= 1:
-        output += fail(natural)
+        # Determine if the roll was natural, and get the correct quirk and points if it is a crit
+        natural = (int(base) == dice) or (int(base) == 1)
+        if roll >= dice:
+            output += crit(natural)
+
+        elif roll <= 1:
+            output += fail(natural)
 
     return output
 
@@ -137,6 +143,22 @@ async def shortcut_roll(ctx):
     """r() takes no arguments and returns a dice roll integer, rolling a standard d20 with no modifiers"""
     await ctx.send(dice_roll(20))
     return
+
+
+@bot.command(name="dnd")
+async def toggleDnd(ctx):
+
+    global dnd
+
+    dnd = not dnd
+
+    if(dnd):
+        await ctx.send("D&D mode turned on!")
+        return
+
+    await ctx.send("D&D mode turned off!")
+    return
+
 
 
 # The async rolling function
