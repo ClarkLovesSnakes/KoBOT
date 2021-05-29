@@ -8,6 +8,8 @@ MAX_QUIRKS = 20
 quirkLines = []
 usedQuirks = []
 dnd = False
+playersToChars = {}
+charsToNumbers = {}
 
 # Instantiate the bot, give it the command prefix
 bot = discord.ext.commands.Bot(command_prefix = "!")
@@ -75,10 +77,12 @@ def quirk(index = None):
 
 
 # The dice-rolling function
-def dice_roll(dice, modifier = None):
+def dice_roll(dice, id, modifier = None):
     """dice_roll() takes two argumetns, dice and modifier. Dice is an integer, and  modifier is either None or an integer. It returns a dice roll result."""
 
     global dnd
+    global playersToChars
+    global charsToNumbers
 
     # Parse the integer value of dice and get the random roll, store that base value
     output = ""
@@ -110,6 +114,10 @@ def dice_roll(dice, modifier = None):
 
         elif roll <= 1:
             output += fail(natural)
+
+        elif roll in charsToNumbers[playersToChars[id]] or int(base) in charsToNumbers[playersToChars[id]]:
+            output += "\n***Lucky Number!***"
+            output += ("\n" + quirk())
 
     return output
 
@@ -193,7 +201,7 @@ async def parse_roll(ctx, dice, modifier = None):
 
     # If there is no d or no number before the D, roll that number
     if dice[0:locationOfD] == "" or locationOfD == -1:
-       await ctx.send(dice_roll(int(dice[locationOfD + 1:]), modifier))
+       await ctx.send(dice_roll(int(dice[locationOfD + 1:]), ctx.author.id, modifier))
 
     # If there is a number in front of the D, roll that many Dice
     else: # If there is a value before the d or D (That is, !roll Xd20)
@@ -207,7 +215,7 @@ async def parse_roll(ctx, dice, modifier = None):
             return
 
         for _ in range(numberOfRolls):
-            await ctx.send(dice_roll(int(dice[locationOfD + 1:]), modifier)) 
+            await ctx.send(dice_roll(int(dice[locationOfD + 1:]), ctx.author.id, modifier)) 
 
     return
 
@@ -250,11 +258,50 @@ async def multiquirk(ctx, number):
         return
 
 
+@bot.command(name = "select")
+async def selectChar(ctx, character):
+
+    global playersToChars
+    global charstoNumbers
+
+    if character not in charsToNumbers:
+        await ctx.send("The character " + character + " does not exist. Consider creating them.")
+        return
+
+    if ctx.author.id in playersToChars:
+        await ctx.send(str(ctx.author.name) + " is no longer playing " + playersToChars[ctx.author.id])
+
+    playersToChars[ctx.author.id] = character
+
+    await ctx.send(str(ctx.author.name) + " is now playing " + character)
+    return
+
+@bot.command(name = "create")
+async def createChar(ctx, character, *args):
+
+    global charsToNumbers
+
+    if character in charsToNumbers:
+        await ctx.send("The character " + character + " already exists.")
+        return
+     
+    # TO-DO:
+    # Make this ints only, make this be at least one, make them > 1, < 20
+    luckyNums = []
+    for i in range(len(args)):
+        luckyNums.append(int(args[i]))
+
+    charsToNumbers[character] = luckyNums
+
+    return
+    
+
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, discord.ext.commands.CommandNotFound):
         await ctx.send("That command does not exist. Please try again.")
         return
+
 
 
 # Speak when online
