@@ -1,15 +1,16 @@
 import discord
+from discord.channel import DMChannel
 from discord.ext import commands
 import asyncio
 import random
 
 #Globals and Constants
-MAX_QUIRKS = 20
 quirkLines = []
 usedQuirks = []
 dnd = False
 playersToChars = {}
 charsToNumbers = {}
+charsToNumbers["None"] = []
 
 # Instantiate the bot, give it the command prefix
 bot = discord.ext.commands.Bot(command_prefix = "!")
@@ -17,11 +18,24 @@ bot = discord.ext.commands.Bot(command_prefix = "!")
 async def main():
     """main() driver function, takes no arguments, returns nothing. Instantiates global arrays, opens secret token file, runs bot based on this token."""
 
+    with open("test.txt", "w+") as test:
+        test.write("testing 123")
+
     global quirkLines
+    global charsToNumbers
 
     # Open the quirk document, populate the global array, and close the document
     with open("Quirks.txt", "r", encoding = "utf-8") as quirks:
         quirkLines = quirks.readlines()
+
+    # Open the characters document, populate the global array, and close the document
+    with open("Characters.txt", "r", encoding = "utf-8") as characters:
+        charLines = characters.readlines()
+        for line in charLines:
+            charsToNumbers[line.split(" ")[0]] = line.split(" ")[1:]
+
+    for key in charsToNumbers:
+        print(key, charsToNumbers[key])
 
     # Get the token out of the secret token doc
     with open("Token.txt", "r", encoding="utf-8") as tokenDoc:
@@ -61,24 +75,13 @@ def quirk(index = None):
     if index is None:
         index = random.randint(0, 99)
 
-        '''#Check that the quirk hasn't been seen recently
-        while(str(index) in usedQuirks):
-            index = random.randint(0, 99)
-
-        # Add the index to the list of quirks that have been used
-        usedQuirks.append(index)
-
-        # If more than the maximum quirks are on the list, delete the oldest entries until it is at the maximum
-        while(len(usedQuirks) > MAX_QUIRKS):
-            del usedQuirks[0]'''
-
     # Send the output
     return quirkLines[index]
 
 
 # The dice-rolling function
 def dice_roll(dice, id, modifier = None):
-    """dice_roll() takes two argumetns, dice and modifier. Dice is an integer, and  modifier is either None or an integer. It returns a dice roll result."""
+    """dice_roll() takes two arguments, dice and modifier. Dice is an integer, and  modifier is either None or an integer. It returns a dice roll result."""
 
     global dnd
     global playersToChars
@@ -151,7 +154,7 @@ def fail(natural):
 @bot.command(name = "r")
 async def shortcut_roll(ctx):
     """r() takes no arguments and returns a dice roll integer, rolling a standard d20 with no modifiers"""
-    await ctx.send(dice_roll(20))
+    await ctx.send(dice_roll(20), ctx.author.id)
     return
 
 
@@ -163,10 +166,12 @@ async def toggleDnd(ctx):
     dnd = not dnd
 
     if(dnd):
+        await bot.change_presence(activity = discord.Game(name = "Dungeons and Dragons"))
         await ctx.send("D&D mode turned on!")
         return
 
     await ctx.send("D&D mode turned off!")
+    await bot.change_presence(activity = discord.Game(name = "Knaves of the Oblong Stool"))
     return
 
 
@@ -260,6 +265,14 @@ async def multiquirk(ctx, number):
         return
 
 
+@bot.command(name = "join")
+async def joinPlayer(ctx):
+    # Players must join the game to play
+    playersToChars[ctx.author.id] = "None"
+    await ctx.send(ctx.author.name + " has joined the game!")
+    return
+
+
 @bot.command(name = "select")
 async def selectChar(ctx, character):
 
@@ -287,23 +300,40 @@ async def createChar(ctx, character, *args):
         await ctx.send("The character " + character + " already exists.")
         return
      
-    # TO-DO:
-    # Make this ints only, make this be at least one, make them > 1, < 20
     luckyNums = []
-    for i in range(len(args)):
-        luckyNums.append(int(args[i]))
+    try:
+        if(len(args)) < 1:
+            raise IndexError
+        for i in range(len(args)):
+            luckyNums.append(int(args[i]))
+            if luckyNums[i] >= 20 or luckyNums[i] <= 1:
+                raise ValueError
+    except IndexError:
+        await ctx.send("Character " + character + " must have at least one lucky number.")
+        return
+    except ValueError:
+        await ctx.send("Character " + character + "'s lucky numbers must be integers greater than 1 but less than 20.")
+        return
 
     charsToNumbers[character] = luckyNums
 
+    with open("Characters.txt", "a") as chars:
+        chars.write(character)
+        chars.write(" ")
+        for n in luckyNums:
+            chars.write(n)
+            chars.write(" ")
+
+    await ctx.send("Character " + character + " has been created with Lucky Numbers " + str(luckyNums))
     return
     
 
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, discord.ext.commands.CommandNotFound):
-        await ctx.send("That command does not exist. Please try again.")
-        return
+@bot.command(name = "query")
+async def query(ctx):
+    global playersToChars
 
+    await ctx.send(ctx.message.author.name + " is playing " + playersToChars[ctx.message.author.id])
+    return
 
 
 # Speak when online
