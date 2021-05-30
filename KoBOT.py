@@ -40,9 +40,6 @@ async def main():
                     
             charsToNumbers[char[0]] = luckyNums
 
-    for key in charsToNumbers:
-        print(key, charsToNumbers[key])
-
     # Get the token out of the secret token doc
     with open("Token.txt", "r", encoding="utf-8") as tokenDoc:
         TOKEN = tokenDoc.readline()
@@ -163,7 +160,7 @@ def fail(natural, isTwenty):
 @bot.command(name = "r")
 async def shortcut_roll(ctx):
     """r() takes no arguments and returns a dice roll integer, rolling a standard d20 with no modifiers"""
-    await ctx.send(dice_roll(20), ctx.author.id)
+    await ctx.send(dice_roll(20, ctx.author.id))
     return
 
 
