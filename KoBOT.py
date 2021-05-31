@@ -11,6 +11,7 @@ dnd = False
 playersToChars = {}
 charsToNumbers = {}
 charsToNumbers["Other"] = []
+genDicts = []
 
 # Instantiate the bot, give it the command prefix
 bot = discord.ext.commands.Bot(command_prefix = "!")
@@ -20,6 +21,7 @@ async def main():
 
     global quirkLines
     global charsToNumbers
+    global genDicts
 
     # Open the quirk document, populate the global array, and close the document
     with open("Quirks.txt", "r", encoding = "utf-8") as quirks:
@@ -39,6 +41,23 @@ async def main():
                 luckyNums[i] = int(luckyNums[i])
                     
             charsToNumbers[char[0]] = luckyNums
+
+    with open("genText.txt", "r", encoding = "utf=8") as gens:
+        genlines = gens.readlines()
+        for gen in genlines:
+            gen = gen.strip()
+            parts = gen.split("|")
+            tempList = []
+            tempDict = {}
+            words = parts[1].split(", ")
+            for word in words:
+                tempList.append(word)
+
+            tempDict[parts[0]] = tempList
+            
+            genDicts.append(tempDict)
+
+
 
     # Get the token out of the secret token doc
     with open("Token.txt", "r", encoding="utf-8") as tokenDoc:
@@ -269,6 +288,25 @@ async def multiquirk(ctx, number):
             await ctx.send(output)
             
         return
+
+
+# The async gen command
+@bot.command(name = "gen")
+async def generate(ctx, type):
+
+    global genDicts
+
+    type = type.lower()
+
+    if type == "insanity":
+        
+        print(genDicts)
+        await ctx.send("crazy")
+
+    else:
+        await ctx.send("That is not a valid generator!")
+
+    return
 
 
 @bot.command(name = "join")
