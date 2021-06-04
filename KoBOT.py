@@ -11,7 +11,7 @@ dnd = False
 playersToChars = {}
 charsToNumbers = {}
 charsToNumbers["Other"] = []
-genDicts = []
+genDicts = {}
 
 # Instantiate the bot, give it the command prefix
 bot = discord.ext.commands.Bot(command_prefix = "!")
@@ -33,12 +33,11 @@ async def main():
         for line in charLines:
             line = line.strip()
             char = line.split("|")
-            try:
+            luckyNums = []
+            if char[1] != "":
                 luckyNums = char[1].split(" ")
-            except IndexError:
-                continue
-            for i in range(len(luckyNums)):
-                luckyNums[i] = int(luckyNums[i])
+                for i in range(len(luckyNums)):
+                    luckyNums[i] = int(luckyNums[i])
                     
             charsToNumbers[char[0]] = luckyNums
 
@@ -48,16 +47,11 @@ async def main():
             gen = gen.strip()
             parts = gen.split("|")
             tempList = []
-            tempDict = {}
             words = parts[1].split(", ")
             for word in words:
                 tempList.append(word)
 
-            tempDict[parts[0]] = tempList
-            
-            genDicts.append(tempDict)
-
-
+            genDicts[parts[0]] = tempList
 
     # Get the token out of the secret token doc
     with open("Token.txt", "r", encoding="utf-8") as tokenDoc:
@@ -143,7 +137,6 @@ def dice_roll(dice, id, modifier = None):
             output += fail(natural, isTwenty)
 
         elif (roll in charsToNumbers[playersToChars[id]] or base in charsToNumbers[playersToChars[id]]) and isTwenty:
-            print("test")
             output += "\n***Lucky Number!***"
             output += ("\n" + quirk())
 
@@ -298,10 +291,9 @@ async def generate(ctx, type):
 
     type = type.lower()
 
-    if type == "insanity":
+    if type == "npc":
         
-        print(genDicts)
-        await ctx.send("crazy")
+        await ctx.send(random.choice(genDicts["npcAdjective"]) + " " + random.choice(genDicts["npcNoun"]) + " who is " + random.choice(genDicts["npcVerb"]))
 
     else:
         await ctx.send("That is not a valid generator!")
@@ -323,11 +315,11 @@ async def selectChar(ctx, character):
     global playersToChars
     global charstoNumbers
 
-    if character != "Other":
-
-        if character not in charsToNumbers:
+    if character not in charsToNumbers:
             await ctx.send("The character " + character + " does not exist. Consider creating them.")
             return
+
+    if character != "Other":
 
         for player in playersToChars:
             if playersToChars[player] == character:
@@ -384,6 +376,10 @@ async def createChar(ctx, character, *args):
 async def query(ctx):
     global playersToChars
 
+    if ctx.message.author.id not in playersToChars.keys():
+        await ctx.send(ctx.message.author.name + " is not playing any character.")
+        return
+
     await ctx.send(ctx.message.author.name + " is playing " + playersToChars[ctx.message.author.id])
     return
 
@@ -392,8 +388,12 @@ async def delete(ctx, character):
     global playersToChars
     global charsToNumbers
 
-    if(character == "Other"):
+    if character == "Other":
         await ctx.send("You cannot Delete \"Other.\" They are too powerful!")
+        return
+
+    if character not in charsToNumbers.keys():
+        await ctx.send("Character " + character + " does not exist.")
         return
 
     for key in playersToChars:
@@ -406,7 +406,7 @@ async def delete(ctx, character):
     with open("Characters.txt", "w") as chars:
         for char in charsToNumbers:
             chars.write(char)
-            chars.write(" ")
+            chars.write("|")
             for n in charsToNumbers[char]:
                 chars.write(str(n))
                 chars.write(" ")
@@ -416,8 +416,43 @@ async def delete(ctx, character):
     return
 
 
+@bot.command(name="edit")
+async def editChar(ctx, character, *args):
+    global charsToNumbers
+
+    if character not in charsToNumbers.keys():
+        await ctx.send("Character " + character + " does not exist.")
+        return
+
+    if character == "Other":
+        await ctx.send("You cannot Edit \"Other.\" They are too powerful!")
+        return
+
+    luckyNums = []
+    try:
+        if(len(args)) < 1:
+            raise IndexError
+        for i in range(len(args)):
+            luckyNums.append(int(args[i]))
+            if luckyNums[i] >= 20 or luckyNums[i] <= 1:
+                raise ValueError
+    except IndexError:
+        await ctx.send("Character " + character + " must have at least one lucky number.")
+        return
+    except ValueError:
+        await ctx.send("Character " + character + "'s lucky numbers must be integers greater than 1 but less than 20.")
+        return
+
+    oldList = charsToNumbers[character]
+
+    charsToNumbers[character] = luckyNums
+
+    await ctx.send("Character " + character + " has had their lucky number(s) updated from " + str(oldList) + " to " + str(luckyNums))
+    return
+
+
 @bot.command(name = "list")
-async def list(ctx):
+async def listChars(ctx):
     global playersToChars
     global charsToNumbers
 
