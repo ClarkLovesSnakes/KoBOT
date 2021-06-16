@@ -80,15 +80,11 @@ async def hello(ctx):
 
 
 # The quirk function
-def quirk(index = None):
+def quirk(index):
     """quirk() takes one optional argument, an integer called index. Returns the quirk at that index, or a random one if no index is specified."""
 
     global quirkLines
     global usedQuirks
-
-    # If no index is requested, select a random one
-    if index is None:
-        index = random.randint(0, 99)
 
     # Send the output
     return quirkLines[index]
@@ -257,6 +253,8 @@ async def find_quirk(ctx, index = None):
         except ValueError:
             await ctx.send("Quirk Index must be some positive integer less than or equal to 100. Please enter a valid index.")
             return
+    else:
+        index = random.randint(1, 100)
 
     output = quirk(index - 1) 
     await ctx.send(output) 
