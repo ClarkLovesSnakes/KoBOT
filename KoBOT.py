@@ -252,13 +252,13 @@ async def find_quirk(ctx, index = None):
     if index is not None:
         try:
             index = int(index)
-            if index < 0:
+            if index < 1 or index > 101:
                 raise ValueError
         except ValueError:
-            await ctx.send("Quirk Index must be some positive integer. Please enter a valid index.")
+            await ctx.send("Quirk Index must be some positive integer less than or equal to 100. Please enter a valid index.")
             return
 
-    output = quirk(index) 
+    output = quirk(index - 1) 
     await ctx.send(output) 
     return
 
