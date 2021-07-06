@@ -7,11 +7,9 @@ import random
 #Globals and Constants
 quirkLines = []
 usedQuirks = []
-dnd = False
 playersToChars = {}
 charsToNumbers = {}
 charsToNumbers["Other"] = []
-genDicts = {}
 
 # Instantiate the bot, give it the command prefix
 bot = discord.ext.commands.Bot(command_prefix = "!")
@@ -41,18 +39,6 @@ async def main():
                     
             charsToNumbers[char[0]] = luckyNums
 
-    with open("genText.txt", "r", encoding = "utf=8") as gens:
-        genlines = gens.readlines()
-        for gen in genlines:
-            gen = gen.strip()
-            parts = gen.split("|")
-            tempList = []
-            words = parts[1].split(", ")
-            for word in words:
-                tempList.append(word)
-
-            genDicts[parts[0]] = tempList
-
     # Get the token out of the secret token doc
     with open("Token.txt", "r", encoding="utf-8") as tokenDoc:
         TOKEN = tokenDoc.readline()
@@ -62,21 +48,27 @@ async def main():
     return
 
 
-@bot.command()
-async def quit(ctx):
-    """quit() takes no arguments, returns nothing, and simply closes the bot, as well as ending relevant processes"""
-
-    await ctx.send("Logging Off!")
-    await bot.close()
-    loop.stop()
-    return
+"""Infrastructure Commands"""
 
 
 @bot.command()
 async def hello(ctx):
     """hello() takes no arguments, returns nothing. Greets the user when prompted"""
-    await ctx.send("Greetings, human!")
+    await ctx.reply("Greetings, human!")
     return
+
+
+@bot.command()
+async def quit(ctx):
+    """quit() takes no arguments, returns nothing, and simply closes the bot, as well as ending relevant processes"""
+
+    await ctx.reply("Logging Off!")
+    await bot.close()
+    loop.stop()
+    return
+
+
+"""Rolling and Quirk Commands"""
 
 
 # The quirk function
@@ -94,7 +86,6 @@ def quirk(index):
 def dice_roll(dice, id, modifier = None):
     """dice_roll() takes two arguments, dice and modifier. Dice is an integer, and  modifier is either None or an integer. It returns a dice roll result."""
 
-    global dnd
     global playersToChars
     global charsToNumbers
 
@@ -112,29 +103,34 @@ def dice_roll(dice, id, modifier = None):
         elif modifier <= -1:
             output += (base + " - " + str(modifier)[1:]) # strip the negative sign off of the modifier
 
-        if not(dnd) and ((roll >= dice and modifier <= -1) or (roll <= 1 and modifier >= 1)):
+        if ((roll >= dice and modifier <= -1) or (roll <= 1 and modifier >= 1)):
             output += "\n" + base
         
         else:
             roll += modifier
             output += "\n" + str(roll)
-
-    if not(dnd):
         
-        base = int(base)
+    base = int(base)
 
-        # Determine if the roll was natural, and get the correct quirk and points if it is a crit
-        isTwenty = dice == 20
-        natural = (base == dice) or (base == 1)
-        if roll >= dice:
-            output += crit(natural, isTwenty)
+    # Determine if the roll was natural, and get the correct quirk and points if it is a crit
+    isTwenty = dice == 20
+    natural = (base == dice) or (base == 1)
+    if roll >= dice:
+        output += crit(natural, isTwenty)
 
-        elif roll <= 1:
-            output += fail(natural, isTwenty)
+    elif roll <= 1:
+        output += fail(natural, isTwenty)
 
-        elif (roll in charsToNumbers[playersToChars[id]] or base in charsToNumbers[playersToChars[id]]) and isTwenty:
-            output += "\n***Lucky Number!***"
-            output += ("\n" + quirk())
+    elif isTwenty:
+        try:
+            isLucky = roll in charsToNumbers[playersToChars[id]] or base in charsToNumbers[playersToChars[id]]
+
+            if isLucky:
+                output += "\n***Lucky Number!***"
+                output += ("\n" + quirk(random.randint(0, 99)))
+
+        except KeyError:
+            output += "\n\n You are not currently playing a character! If you do not have a character (including if you are the GM), use !join to be assigned to the default character."
 
     return output
 
@@ -144,7 +140,7 @@ def crit(natural, isTwenty):
 
     output = "\n***Critical Success!***"
     if isTwenty:
-        output += ("\n" + quirk())
+        output += ("\n" + quirk(random.randint(0, 99)))
         if natural:
             output += "You gained three **(3)** Positive Crit Points from a Natural Critical Success. Apply them as you wish or store them in your pool."
             return output
@@ -156,7 +152,7 @@ def fail(natural, isTwenty):
 
     output = "\n***Critical Failure!***"
     if isTwenty:
-        output += ("\n" + quirk())
+        output += ("\n" + quirk(random.randint(0, 99)))
         if natural:
             output += "You gained three **(3)** Negative Crit Points from a Natural Critical Failure. Unless otherwise instructed, please apply them now."
             return output
@@ -164,43 +160,54 @@ def fail(natural, isTwenty):
     return output
 
 
-# The shortcut async rolling function for a plain d20
-@bot.command(name = "r")
-async def shortcut_roll(ctx):
-    """r() takes no arguments and returns a dice roll integer, rolling a standard d20 with no modifiers"""
-    await ctx.send(dice_roll(20, ctx.author.id))
-    return
+# The dice-rolling function
+def check_roll(dice, modifier = None):
+    """dice_roll() takes two arguments, dice and modifier. Dice is an integer, and  modifier is either None or an integer. It returns a dice roll result."""
 
+    global playersToChars
+    global charsToNumbers
 
-@bot.command(name="dnd")
-async def toggleDnd(ctx):
+    # Parse the integer value of dice and get the random roll, store that base value
+    output = ""
+    roll = random.randint(1, dice) # Generate the actual roll
+    base = str(roll) 
 
-    global dnd
+    # Determine the modifier, and if it exists, add it to the output
+    if modifier is None:
+        output += base
+    else:
+        if modifier >= 0:
+            output += (base + " + " + str(modifier))
+        elif modifier <= -1:
+            output += (base + " - " + str(modifier)[1:]) # strip the negative sign off of the modifier
 
-    dnd = not dnd
+        if ((roll >= dice and modifier <= -1) or (roll <= 1 and modifier >= 1)):
+            output += "\n" + base
+        
+        else:
+            roll += modifier
+            output += "\n" + str(roll)
 
-    if(dnd):
-        await bot.change_presence(activity = discord.Game(name = "Dungeons and Dragons"))
-        await ctx.send("D&D mode turned on!")
-        return
+    if roll >= dice:
+        output += "\n***Critical Success!***"
 
-    await ctx.send("D&D mode turned off!")
-    await bot.change_presence(activity = discord.Game(name = "Knaves of the Oblong Stool"))
-    return
+    elif roll <= 1:
+        output += "\n***Critical Failure!***"
 
+    return output
 
 
 # The async rolling function
 @bot.command(name = "roll")
 async def parse_roll(ctx, dice, modifier = None):
-    """roll() takes two arguments, a string dice and a string modifier, both with specifics formats, and return nothing. Parses the dice string, and gets the values for a dice roll with that modifier """
+    """parse_roll() takes two arguments, a string dice and a string modifier, both with specifics formats, and return nothing. Parses the dice string, and gets the values for a dice roll with that modifier"""
 
     # If the modifier exists, it must be an integer
     if modifier is not None:
         try:
             modifier = int(modifier)
         except ValueError:
-            await ctx.send("Modifier must be some integer. Please enter a valid modifier.")
+            await ctx.reply("Modifier must be some integer. Please enter a valid modifier.")
             return
 
     # Assume a negative location to start
@@ -217,12 +224,12 @@ async def parse_roll(ctx, dice, modifier = None):
         if final <= 0:
             raise ValueError
     except ValueError:
-        await ctx.send("Dice to be rolled must be a positive integer.")
+        await ctx.reply("Dice to be rolled must be a positive integer.")
         return
 
     # If there is no d or no number before the D, roll that number
     if dice[0:locationOfD] == "" or locationOfD == -1:
-       await ctx.send(dice_roll(int(dice[locationOfD + 1:]), ctx.author.id, modifier))
+       await ctx.reply(dice_roll(int(dice[locationOfD + 1:]), ctx.author.id, modifier))
 
     # If there is a number in front of the D, roll that many Dice
     else: # If there is a value before the d or D (That is, !roll Xd20)
@@ -232,12 +239,78 @@ async def parse_roll(ctx, dice, modifier = None):
             if numberOfRolls <= 0:
                 raise ValueError
         except ValueError:
-            await ctx.send("Number of dice to be rolled must be a positive integer.")
+            await ctx.reply("Number of dice to be rolled must be a positive integer.")
             return
 
         for _ in range(numberOfRolls):
-            await ctx.send(dice_roll(int(dice[locationOfD + 1:]), ctx.author.id, modifier)) 
+            await ctx.reply(dice_roll(int(dice[locationOfD + 1:]), ctx.author.id, modifier)) 
 
+    return
+
+
+@bot.command(name = "check")
+async def parse_check(ctx, dice, modifier = None):
+    """parse_check() takes two arguments, a string dice and a string modifier, both with specifics formats, and return nothing. Parses the dice string, and gets the values for a dice roll with that modifier"""
+
+    # If the modifier exists, it must be an integer
+    if modifier is not None:
+        try:
+            modifier = int(modifier)
+        except ValueError:
+            await ctx.reply("Modifier must be some integer. Please enter a valid modifier.")
+            return
+
+    # Assume a negative location to start
+    locationOfD = -1
+
+    # Find the d or D if relevant
+    for i in range(len(dice)):
+        if dice[i] in ["d", "D"]:
+            locationOfD = i
+            break
+
+    try:
+        final = int(dice[locationOfD + 1:])
+        if final <= 0:
+            raise ValueError
+    except ValueError:
+        await ctx.reply("Dice to be rolled must be a positive integer.")
+        return
+
+    # If there is no d or no number before the D, roll that number
+    if dice[0:locationOfD] == "" or locationOfD == -1:
+       await ctx.reply(check_roll(int(dice[locationOfD + 1:]), modifier))
+
+    # If there is a number in front of the D, roll that many Dice
+    else: # If there is a value before the d or D (That is, !roll Xd20)
+
+        try:
+            numberOfRolls = int(dice[0:locationOfD])
+            if numberOfRolls <= 0:
+                raise ValueError
+        except ValueError:
+            await ctx.reply("Number of dice to be rolled must be a positive integer.")
+            return
+
+        for _ in range(numberOfRolls):
+            await ctx.reply(check_roll(int(dice[locationOfD + 1:]), modifier)) 
+
+    return
+
+
+# The shortcut async rolling function for a plain d20
+@bot.command(name = "r")
+async def shortcut_roll(ctx):
+    """r() takes no arguments and returns a dice roll integer, rolling a standard d20 with no modifiers"""
+    await ctx.reply(dice_roll(20, ctx.author.id))
+    return
+
+
+# The shortcut async checking function for a plain d20
+@bot.command(name = "c")
+async def shortcut_check(ctx):
+    
+    await ctx.reply(check_roll(20))
     return
 
 # The async quirk command
@@ -251,13 +324,13 @@ async def find_quirk(ctx, index = None):
             if index < 1 or index > 101:
                 raise ValueError
         except ValueError:
-            await ctx.send("Quirk Index must be some positive integer less than or equal to 100. Please enter a valid index.")
+            await ctx.reply("Quirk Index must be some positive integer less than or equal to 100. Please enter a valid index.")
             return
     else:
-        index = random.randint(1, 100)
+        index = random.randint(0, 99)
 
-    output = quirk(index - 1) 
-    await ctx.send(output) 
+    output = quirk(index) 
+    await ctx.reply(output) 
     return
 
 
@@ -271,66 +344,27 @@ async def multiquirk(ctx, number):
         if number <= 0:
             raise ValueError
     except ValueError:
-        await ctx.send("Multiquirk Number must be some positive integer. Please enter a valid number.")
+        await ctx.reply("Multiquirk Number must be some positive integer. Please enter a valid number.")
         return
     else:
         for _ in range(number):
-            output = quirk(None)
-            await ctx.send(output)
+            index = random.randint(0, 99)
+            output = quirk(index)
+            await ctx.reply(output)
             
         return
 
 
-# The async gen command
-@bot.command(name = "gen")
-async def generate(ctx, type):
-
-    global genDicts
-
-    type = type.lower()
-
-    if type == "npc":
-        
-        await ctx.send(random.choice(genDicts["npcAdjective"]) + " " + random.choice(genDicts["npcNoun"]) + " who is " + random.choice(genDicts["npcVerb"]))
-
-    else:
-        await ctx.send("That is not a valid generator!")
-
-    return
+"""Character Creation Commands"""
 
 
 @bot.command(name = "join")
 async def joinPlayer(ctx):
     # Players must join the game to play
     playersToChars[ctx.author.id] = "Other"
-    await ctx.send(ctx.author.name + " has joined the game!")
+    await ctx.reply(ctx.author.name + " has joined the game!")
     return
 
-
-@bot.command(name = "select")
-async def selectChar(ctx, character):
-
-    global playersToChars
-    global charstoNumbers
-
-    if character not in charsToNumbers:
-            await ctx.send("The character " + character + " does not exist. Consider creating them.")
-            return
-
-    if character != "Other":
-
-        for player in playersToChars:
-            if playersToChars[player] == character:
-                await ctx.send("The character " + character + " is already being played!")
-                return
-
-    if ctx.author.id in playersToChars:
-        await ctx.send(str(ctx.author.name) + " is no longer playing " + playersToChars[ctx.author.id])
-
-    playersToChars[ctx.author.id] = character
-
-    await ctx.send(str(ctx.author.name) + " is now playing " + character)
-    return
 
 @bot.command(name = "create")
 async def createChar(ctx, character, *args):
@@ -338,7 +372,7 @@ async def createChar(ctx, character, *args):
     global charsToNumbers
 
     if character in charsToNumbers:
-        await ctx.send("The character " + character + " already exists.")
+        await ctx.reply("The character " + character + " already exists.")
         return
      
     luckyNums = []
@@ -350,10 +384,10 @@ async def createChar(ctx, character, *args):
             if luckyNums[i] >= 20 or luckyNums[i] <= 1:
                 raise ValueError
     except IndexError:
-        await ctx.send("Character " + character + " must have at least one lucky number.")
+        await ctx.reply("Character " + character + " must have at least one lucky number.")
         return
     except ValueError:
-        await ctx.send("Character " + character + "'s lucky numbers must be integers greater than 1 but less than 20.")
+        await ctx.reply("Character " + character + "'s lucky numbers must be integers greater than 1 but less than 20.")
         return
 
     charsToNumbers[character] = luckyNums
@@ -366,7 +400,33 @@ async def createChar(ctx, character, *args):
             chars.write(" ")
         chars.write("\n")
 
-    await ctx.send("Character " + character + " has been created with Lucky Numbers " + str(luckyNums))
+    await ctx.reply("Character " + character + " has been created with Lucky Numbers " + str(luckyNums))
+    return
+
+
+@bot.command(name = "select")
+async def selectChar(ctx, character):
+
+    global playersToChars
+    global charstoNumbers
+
+    if character not in charsToNumbers:
+            await ctx.reply("The character " + character + " does not exist. Consider creating them.")
+            return
+
+    if character != "Other":
+
+        for player in playersToChars:
+            if playersToChars[player] == character:
+                await ctx.reply("The character " + character + " is already being played!")
+                return
+
+    if ctx.author.id in playersToChars:
+        await ctx.reply(str(ctx.author.name) + " is no longer playing " + playersToChars[ctx.author.id])
+
+    playersToChars[ctx.author.id] = character
+
+    await ctx.reply(str(ctx.author.name) + " is now playing " + character)
     return
     
 
@@ -375,10 +435,10 @@ async def query(ctx):
     global playersToChars
 
     if ctx.message.author.id not in playersToChars.keys():
-        await ctx.send(ctx.message.author.name + " is not playing any character.")
+        await ctx.reply(ctx.message.author.name + " is not playing any character.")
         return
 
-    await ctx.send(ctx.message.author.name + " is playing " + playersToChars[ctx.message.author.id])
+    await ctx.reply(ctx.message.author.name + " is playing " + playersToChars[ctx.message.author.id])
     return
 
 @bot.command(name = "delete")
@@ -387,11 +447,11 @@ async def delete(ctx, character):
     global charsToNumbers
 
     if character == "Other":
-        await ctx.send("You cannot Delete \"Other.\" They are too powerful!")
+        await ctx.reply("You cannot Delete \"Other.\" They are too powerful!")
         return
 
     if character not in charsToNumbers.keys():
-        await ctx.send("Character " + character + " does not exist.")
+        await ctx.reply("Character " + character + " does not exist.")
         return
 
     for key in playersToChars:
@@ -410,7 +470,7 @@ async def delete(ctx, character):
                 chars.write(" ")
             chars.write("\n")
     
-    await ctx.send(character + " has been deleted!")
+    await ctx.reply(character + " has been deleted!")
     return
 
 
@@ -419,11 +479,11 @@ async def editChar(ctx, character, *args):
     global charsToNumbers
 
     if character not in charsToNumbers.keys():
-        await ctx.send("Character " + character + " does not exist.")
+        await ctx.reply("Character " + character + " does not exist.")
         return
 
     if character == "Other":
-        await ctx.send("You cannot Edit \"Other.\" They are too powerful!")
+        await ctx.reply("You cannot Edit \"Other.\" They are too powerful!")
         return
 
     luckyNums = []
@@ -435,17 +495,17 @@ async def editChar(ctx, character, *args):
             if luckyNums[i] >= 20 or luckyNums[i] <= 1:
                 raise ValueError
     except IndexError:
-        await ctx.send("Character " + character + " must have at least one lucky number.")
+        await ctx.reply("Character " + character + " must have at least one lucky number.")
         return
     except ValueError:
-        await ctx.send("Character " + character + "'s lucky numbers must be integers greater than 1 but less than 20.")
+        await ctx.reply("Character " + character + "'s lucky numbers must be integers greater than 1 but less than 20.")
         return
 
     oldList = charsToNumbers[character]
 
     charsToNumbers[character] = luckyNums
 
-    await ctx.send("Character " + character + " has had their lucky number(s) updated from " + str(oldList) + " to " + str(luckyNums))
+    await ctx.reply("Character " + character + " has had their lucky number(s) updated from " + str(oldList) + " to " + str(luckyNums))
     return
 
 
@@ -454,10 +514,10 @@ async def listChars(ctx):
     global playersToChars
     global charsToNumbers
 
-    await ctx.send("List of current characters:\n")
+    await ctx.reply("List of current characters:\n")
     for character in charsToNumbers:
         if character != "Other":
-            await ctx.send(character)
+            await ctx.reply(character)
 
     return
 
