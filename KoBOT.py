@@ -188,11 +188,20 @@ def check_roll(dice, modifier = None):
             roll += modifier
             output += "\n" + str(roll)
 
-    if roll >= dice:
-        output += "\n***Critical Success!***"
+    base = int(base)
 
+    if base >= dice:
+        output += "\n***Critical Success!***"
+        output += "\nYou gained three **(3)** Positive Crit Points from a Natural Critical Success. Apply them as you wish or store them in your pool."
+    elif roll >= dice:
+        output += "\n***Critical Success!***"
+        output += "\nYou gained two **(2)** Positive Crit Points. Apply them as you wish or store them in your pool."
+    elif base <= 1:
+        output += "\n***Critical Failure!***"
+        output += "\nYou gained three **(3)** Negative Crit Points from a Natural Critical Failure. Unless otherwise instructed, please apply them now."
     elif roll <= 1:
         output += "\n***Critical Failure!***"
+        output += "\nYou gained two **(2)** Negative Crit Points. Unless otherwise instructed, please apply them now."
 
     return output
 
@@ -362,7 +371,7 @@ async def multiquirk(ctx, number):
 async def joinPlayer(ctx):
     # Players must join the game to play
     playersToChars[ctx.author.id] = "Other"
-    await ctx.reply(ctx.author.name + " has joined the game!")
+    await ctx.reply(ctx.author.display_name + " has joined the game!")
     return
 
 
@@ -422,11 +431,11 @@ async def selectChar(ctx, character):
                 return
 
     if ctx.author.id in playersToChars:
-        await ctx.reply(str(ctx.author.name) + " is no longer playing " + playersToChars[ctx.author.id])
+        await ctx.reply(str(ctx.author.display_name) + " is no longer playing " + playersToChars[ctx.author.id])
 
     playersToChars[ctx.author.id] = character
 
-    await ctx.reply(str(ctx.author.name) + " is now playing " + character)
+    await ctx.reply(str(ctx.author.display_name) + " is now playing " + character)
     return
     
 
@@ -435,10 +444,10 @@ async def query(ctx):
     global playersToChars
 
     if ctx.message.author.id not in playersToChars.keys():
-        await ctx.reply(ctx.message.author.name + " is not playing any character.")
+        await ctx.reply(ctx.author.display_name + " is not playing any character.")
         return
 
-    await ctx.reply(ctx.message.author.name + " is playing " + playersToChars[ctx.message.author.id])
+    await ctx.reply(ctx.author.display_name + " is playing " + playersToChars[ctx.message.author.id])
     return
 
 @bot.command(name = "delete")
