@@ -315,6 +315,7 @@ async def parse_check(ctx, dice, modifier = None):
 
         for _ in range(numberOfRolls):
             output += check_roll(int(dice[locationOfD + 1:]), modifier)
+            output += "\n"
 
         await ctx.reply(output)
 
