@@ -214,7 +214,11 @@ async def parse_roll(ctx, dice, modifier = None):
     # If the modifier exists, it must be an integer
     if modifier is not None:
         try:
-            modifier = int(modifier)
+            modifier = modifier.strip()
+            if modifier[0] == "+":
+                modifier = int(modifier[1:])
+            else:
+                modifier = int(modifier)
         except ValueError:
             await ctx.reply("Modifier must be some integer. Please enter a valid modifier.")
             return
@@ -264,7 +268,11 @@ async def parse_check(ctx, dice, modifier = None):
     # If the modifier exists, it must be an integer
     if modifier is not None:
         try:
-            modifier = int(modifier)
+            modifier = modifier.strip()
+            if modifier[0] == "+":
+                modifier = int(modifier[1:])
+            else:
+                modifier = int(modifier)
         except ValueError:
             await ctx.reply("Modifier must be some integer. Please enter a valid modifier.")
             return
@@ -286,9 +294,13 @@ async def parse_check(ctx, dice, modifier = None):
         await ctx.reply("Dice to be rolled must be a positive integer.")
         return
 
+    output = ""
+
     # If there is no d or no number before the D, roll that number
     if dice[0:locationOfD] == "" or locationOfD == -1:
-       await ctx.reply(check_roll(int(dice[locationOfD + 1:]), modifier))
+        output += check_roll(int(dice[locationOfD + 1:]), modifier)
+
+        await ctx.reply(output)
 
     # If there is a number in front of the D, roll that many Dice
     else: # If there is a value before the d or D (That is, !roll Xd20)
@@ -302,7 +314,9 @@ async def parse_check(ctx, dice, modifier = None):
             return
 
         for _ in range(numberOfRolls):
-            await ctx.reply(check_roll(int(dice[locationOfD + 1:]), modifier)) 
+            output += check_roll(int(dice[locationOfD + 1:]), modifier)
+
+        await ctx.reply(output)
 
     return
 
