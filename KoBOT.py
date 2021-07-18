@@ -255,8 +255,11 @@ async def parse_roll(ctx, dice, modifier = None):
             await ctx.reply("Number of dice to be rolled must be a positive integer.")
             return
 
+        output = ""
         for _ in range(numberOfRolls):
-            await ctx.reply(dice_roll(int(dice[locationOfD + 1:]), ctx.author.id, modifier)) 
+            output += dice_roll(int(dice[locationOfD + 1:]), ctx.author.id, modifier)
+            output += "\n\n"
+        await ctx.reply(output) 
 
     return
 
@@ -315,7 +318,7 @@ async def parse_check(ctx, dice, modifier = None):
 
         for _ in range(numberOfRolls):
             output += check_roll(int(dice[locationOfD + 1:]), modifier)
-            output += "\n"
+            output += "\n\n"
 
         await ctx.reply(output)
 
