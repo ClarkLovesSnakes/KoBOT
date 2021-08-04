@@ -374,10 +374,13 @@ async def multiquirk(ctx, number):
         await ctx.reply("Multiquirk Number must be some positive integer. Please enter a valid number.")
         return
     else:
+        output = ""
         for _ in range(number):
             index = random.randint(0, 99)
-            output = quirk(index)
-            await ctx.reply(output)
+            output += quirk(index)
+            output += "\n\n"
+        
+        await ctx.reply(output)
             
         return
 
