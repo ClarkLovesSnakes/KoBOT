@@ -1,3 +1,0 @@
-npcAdjective|wet, angry, combusting, arrogant, fish-smelling, explosive, far too tired
-npcNoun|bookkeeper, artillery gunner, steelworker, teacher, intern, sculptor, flutist, xenophobe
-npcVerb|washing the dishes, crying, staring into the middle distance, flexing, hopping on one foot, eating 

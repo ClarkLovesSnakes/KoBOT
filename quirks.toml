@@ -1,0 +1,129 @@
+[1]
+    number = 1
+    name = "Deus Ex"
+    text = "Some powerful entity does you a favor. Terms and conditions may apply."
+
+[2]
+    number = 2
+    name = "Scrappy"
+    text = "Some new objects or tools have entered the fray. There’s sword in them thar hills!"
+
+[3]
+    number = 3
+    name = "Vanish"
+    text = "Some object or person has been lost or disappeared without a trace at least for now. Ok, maybe there’s one trace."
+
+[4]
+    number = 4
+    name = "The Floor Is"
+    text = "Some part of the environment is now something different. Best try to stay above it all."
+
+[5]
+    number = 5
+    name = "Morph"
+    text = "Some creature or object has changed in size, shape, or quality. What do you mean I can’t fly until I reach the Nether?!"
+
+[6]
+    number = 6
+    name = "Aroma"
+    text = "Something’s level of cleanliness has been changed drastically. My pant…"
+
+[7]
+    number = 7
+    name = "Razzle-Dazzle"
+    text = "Your action is now very flashy, in ways that most likely do not increase its efficacy. I don’t think the back-up jugglers were necessary."
+
+[8]
+    number = 8
+    name = "Glamourous"
+    text = "Some set of Characters is perceiving things differently than before. Beware the plurmple galooterflies."
+
+[9]
+    number = 9
+    name = "Cha Cha Slide"
+    text = "Some Character has rather lost control of their body. Take it back now y’all."
+
+[10]
+    number = 10
+    name = "Tenfold"
+    text = "Your action is much more intense than was intended. Whoops."
+
+[11]
+    number = 11
+    name = "Retcon"
+    text = "The intended effect of your action occurred, but the action as described did not. What happened to personal responsibility?"
+
+ [12]
+    number = 12
+    name = "Overwhelmed"
+    text = "Someone has been filled with intense, raw emotion, and their action will be thusly affected."
+
+[13]
+    number = 13
+    name = "Portend"
+    text = 'Your action is unaffected, but a cliched foreshadowing symbol appears in the world or a vision. Quoth the raven, “Overdone!"'
+
+[14]
+    number = 14
+    name = "Epiphany"
+    text = "Your character has a realization about themselves. I think I’m gay.. Well I think I need a damn sandwich!"
+
+[15]
+    number = 15
+    name = "Moniker"
+    text = 'Your action will result in a nickname or catch-phrase becoming associated with your Character. That nickname might just be “idiot.”'
+
+[16]
+    number = 16
+    name = "Bearpoke"
+    text = "The participants in the goings on have changed. Let deceitful dogs nap."
+
+[17]
+    number = 17
+    name = "Situationship"
+    text = "Something about the relationship between active parties has now changed. It’s polyculin’ time."
+
+[18]
+    number = 18
+    name = "Indecision"
+    text = "Some party must now make a difficult binary choice of varying importance. Do I want infinite wealth, or to be pummeled by rocks?"
+
+[19]
+    number = 19
+    name = "Meta"
+    text = "Your action calls attention to something from the game world that matches real life, i. e. a sound in game from a real life source, or an inside joke with your group. See the world through prose-colored glasses."
+
+[20]
+    number = 20
+    name = "Spotlight"
+    text = "Something is revealed to be of vast importance, be it religiously, culturally, or simply to the plot. How dare you use the fabled Gilded Handkerchief of Saint Karklton to wipe your brow sweat, and on the day of his feast!"
+
+[21]
+    number = 21
+    name = "Magenta"
+    text = "How did you get this quirk? Are you haxxor? Get outta my game!"
+
+[69]
+    number = 69
+    name = "Inversion"
+    text = "Something is now backwards. Or inside out. Or upside down. Or downside up."
+
+["cocked"]
+    number = "Cocked"
+    name = "Cactus"
+    text = "Cactus"
+
+["offthetable"]
+    number = "Off the Table"
+    name = "Dud"
+    text = "Your action proceeds quirkless, so much so that it probably won’t be remembered at all."
+
+["quadruples"]
+    number = "Quadruples"
+    name = "Advantage"
+    text = "Roll 2 quirks and select one."
+
+["rolledthewrongdie"]
+    number = "Rolled the Wrong Die"
+    name = "Neglect"
+    text = "The efficacy of your action was not determined by any real current merit on your part, but by the failures of another, or your past self."
