@@ -8,6 +8,7 @@ import logging
 import random
 import tomllib
 import re
+import os
 
 
 class QuirkNotFoundError(Exception):
@@ -33,12 +34,13 @@ class YDLSource(discord.PCMVolumeTransformer):
             }
 
 
-    def __init__(self, source, *, data, volume=0.5):
+    def __init__(self, source, *, data, filename, volume=0.5):
         super().__init__(source, volume)
 
         self.data = data
         self.title = data.get("title")
         self.url = data.get("url")
+        self.filename = filename
 
     @classmethod
     async def from_url(cls, url, *, loop=None, stream=False):
@@ -51,7 +53,7 @@ class YDLSource(discord.PCMVolumeTransformer):
                 data = data["entries"][0]
 
             filename = data["url"] if stream else ydl.prepare_filename(data)
-            return cls(discord.FFmpegPCMAudio(filename, **cls.ffmpeg_options), data=data)
+            return cls(discord.FFmpegPCMAudio(filename, **cls.ffmpeg_options), data=data, filename=filename)
 
 
 class KoBot(commands.Cog):
@@ -59,6 +61,42 @@ class KoBot(commands.Cog):
         self.bot = bot
         self.quirks = quirks
 
+        self.files = []
+
+        self._vol = 0.5
+        self._source = None
+
+
+    @property
+    def vol(self):
+        return self._vol
+
+
+    @vol.setter
+    def vol(self, val):
+        val = int(val)
+        if not isinstance(val, int) or val > 100 or val < 0:
+            raise Exception("Volume must be a float between 0 and 1")
+
+        val /= 100
+        self._vol = val
+
+        if self.source is not None:
+            self.source.volume = self._vol
+
+
+    @property
+    def source(self):
+        return self._source
+
+
+    @source.setter
+    def source(self, val):
+        self._source = val
+
+        self._source.volume = self._vol
+ 
+  
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def join(self, ctx, *, channel: discord.VoiceChannel | None = None):
@@ -77,8 +115,8 @@ class KoBot(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def play(self, ctx, *, query):
-        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
-        ctx.voice_client.play(source, after=lambda e: print(f"Player error: {e}") if e else None)
+        self.source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
+        ctx.voice_client.play(self.source, after=lambda e: print(f"Player error: {e}") if e else None)
 
         await ctx.send(f"Now playing: {query}")
 
@@ -87,30 +125,32 @@ class KoBot(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def yt(self, ctx, *, url):
         async with ctx.typing():
-            player = await YDLSource.from_url(url, loop=self.bot.loop)
-            ctx.voice_client.play(player, after=lambda e: print(f"Player error: {e}") if e else None)
+            self.source = await YDLSource.from_url(url, loop=self.bot.loop)
+            self.files.append(self.source.filename)
+            ctx.voice_client.play(self.source, after=lambda e: print(f"Player error: {e}") if e else None)
 
-            await ctx.send(f"Now playing: {player.title}")
+            await ctx.send(f"Now playing: {self.source.title}")
 
 
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def stream(self, ctx, *, url):
         async with ctx.typing():
-            player = await YDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(player, after=lambda e: print(f"Player error: {e}") if e else None)
+            self.source = await YDLSource.from_url(url, loop=self.bot.loop, stream=True)
+            ctx.voice_client.play(self.source, after=lambda e: print(f"Player error: {e}") if e else None)
 
-        await ctx.send(f"Now playing: {player.title}")
+        await ctx.send(f"Now playing: {self.source.title}")
 
 
     @commands.command()
+    @commands.has_permissions(administrator=True)
     async def pause(self, ctx):
-        await ctx.voice_client.pause()
+        ctx.voice_client.pause()
 
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def resume(self, ctx):
-        await ctx.voice_client.resume()
+        ctx.voice_client.resume()
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -118,6 +158,27 @@ class KoBot(commands.Cog):
         """Stops and disconnects the bot from voice"""
 
         await ctx.voice_client.disconnect()
+
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def volume(self, ctx, *, val=None):
+        if val:
+            try:
+                self.vol = val
+            except Exception as e:
+                return await ctx.reply(e)
+
+            return await ctx.send(f"Volume set to {int(float(self.vol) * 100)}%")
+        else:
+            return await ctx.send(f"Volume is {int(float(self.vol) * 100)}%")
+
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def mute(self, ctx):
+        self.vol = 0
+        return await ctx.send(f"Volume muted")
 
 
     @play.before_invoke
@@ -131,6 +192,17 @@ class KoBot(commands.Cog):
                 await ctx.send("You are not connected to a voice channel.")
         elif ctx.voice_client.is_playing():
             ctx.voice_client.stop()
+
+
+    @yt.after_invoke
+    async def remove_file(self, ctx):
+        for f in self.files:
+            try:
+                os.remove(f)
+                self.files.remove(f)
+            except Exception as e:
+                print(f"Error removing file {f}:")
+                print(f"{e}\n")
 
 
     @commands.command(aliases=["rr", "regr", "rroll", "regroll", "regularroll", "reg_roll"])
