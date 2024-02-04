@@ -160,7 +160,7 @@ class KoBot(commands.Cog):
         await ctx.voice_client.disconnect()
 
 
-    @commands.command()
+    @commands.command(aliases=["vol", "v"])
     @commands.has_permissions(administrator=True)
     async def volume(self, ctx, *, val=None):
         if val:
