@@ -214,14 +214,14 @@ class KoBot(commands.Cog):
 
         if args:
             args = "".join(args)
-            mods_re = re.compile("[+-]\d+")
+            mods_re = re.compile(r"[+-]\d+")
             mods = mods_re.findall(args)
             for m in mods:
                 args = args[:args.find(m)] + args[args.find(m) + len(m):]
 
             mods = [int(m) for m in mods]
 
-            ndn_re = re.compile("\d*[dD]?[+-]?\d+")
+            ndn_re = re.compile(r"\d*[dD]?[+-]?\d+")
             ndns = ndn_re.search(args)
 
             if ndns:
@@ -280,7 +280,7 @@ class KoBot(commands.Cog):
         await ctx.reply(result)
 
 
-    @commands.command(aliases=["r", "kr", "kanvesr", "kroll", "knavesroll", "knavroll", "k_roll", "roll"])
+    @commands.command(aliases=["r", "kr", "knavesr", "kroll", "knavesroll", "knavroll", "k_roll", "roll"])
     async def knaves_roll(self, ctx, *args):
 
         times = 2
@@ -291,27 +291,27 @@ class KoBot(commands.Cog):
 
         if args:
             args = "".join(args)
-            mods_re = re.compile("[+-]\d+")
+            mods_re = re.compile(r"[+-]\d+")
             mods = mods_re.findall(args)
             for m in mods:
                 args = args[:args.find(m)] + args[args.find(m) + len(m):]
 
             mods = [int(m) for m in mods]
 
-            fort_re = re.compile("\d+f[a-zA-Z]*")
+            fort_re = re.compile(r"\d+f[a-zA-Z]*")
             fort = fort_re.findall(args)
             for f in fort:
                 args = args[:args.find(f)] + args[args.find(f) + len(f):]
 
-            fort_num_re = re.compile("\d+")
+            fort_num_re = re.compile(r"\d+")
             fort = [int(fort_num_re.match(f).group()) for f in fort]
 
-            mis_re = re.compile("\d+m[a-zA-Z]*")
+            mis_re = re.compile(r"\d+m[a-zA-Z]*")
             mis = mis_re.findall(args)
             for m in mis:
                 args = args[:args.find(m)] + args[args.find(m) + len(m):]
 
-            mis_num_re = re.compile("\d+")
+            mis_num_re = re.compile(r"\d+")
             mis = [int(mis_num_re.match(m).group()) for m in mis]
 
             times += sum(fort) + sum(mis)
@@ -395,12 +395,12 @@ class KoBot(commands.Cog):
     async def fortune_roll(self, ctx, *args):
         if args:
             args = "".join(args)
-            mods_re = re.compile("[+-]\d+")
+            mods_re = re.compile(r"[+-]\d+")
             mods = mods_re.findall(args)
             for m in mods:
                 args = args[:args.find(m)] + args[args.find(m) + len(m):]
 
-            fort_re = re.compile("\d+")
+            fort_re = re.compile(r"\d+")
             num_fort = fort_re.match(args).group()
 
             final_input = f"{num_fort}f"
@@ -420,12 +420,12 @@ class KoBot(commands.Cog):
     async def misfortune_roll(self, ctx, *args):
         if args:
             args = "".join(args)
-            mods_re = re.compile("[+-]\d+")
+            mods_re = re.compile(r"[+-]\d+")
             mods = mods_re.findall(args)
             for m in mods:
                 args = args[:args.find(m)] + args[args.find(m) + len(m):]
 
-            fort_re = re.compile("\d+")
+            fort_re = re.compile(r"\d+")
             num_fort = fort_re.match(args).group()
 
             final_input = f"{num_fort}m"
