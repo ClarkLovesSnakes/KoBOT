@@ -6,9 +6,12 @@ from typing import TextIO
 import yt_dlp
 import logging
 import random
-import tomllib
 import re
 import os
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib
 
 
 class QuirkNotFoundError(Exception):
