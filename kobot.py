@@ -8,6 +8,7 @@ import logging
 import random
 import re
 import os
+
 try:
     import tomllib
 except ModuleNotFoundError:
@@ -20,22 +21,21 @@ class QuirkNotFoundError(Exception):
 
 class YDLSource(discord.PCMVolumeTransformer):
     ydl_format_options = {
-        'format': 'bestaudio/best',
-        'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
-        'restrictfilenames': True,
-        'noplaylist': True,
-        'nocheckcertificate': True,
-        'ignoreerrors': False,
-        'logtostderr': False,
-        'quiet': True,
-        'no_warnings': True,
-        'default_search': 'auto',
-        'source_address': '0.0.0.0',  # bind to ipv4 since ipv6 addresses cause issues sometimes
+        "format": "bestaudio/best",
+        "outtmpl": "%(extractor)s-%(id)s-%(title)s.%(ext)s",
+        "restrictfilenames": True,
+        "noplaylist": True,
+        "nocheckcertificate": True,
+        "ignoreerrors": False,
+        "logtostderr": False,
+        "quiet": True,
+        "no_warnings": True,
+        "default_search": "auto",
+        "source_address": "0.0.0.0",  # bind to ipv4 since ipv6 addresses cause issues sometimes
     }
     ffmpeg_options = {
-            "options": "-vn",
-            }
-
+        "options": "-vn",
+    }
 
     def __init__(self, source, *, data, filename, volume=0.5):
         super().__init__(source, volume)
@@ -49,14 +49,19 @@ class YDLSource(discord.PCMVolumeTransformer):
     async def from_url(cls, url, *, loop=None, stream=False):
         loop = loop or asyncio.get_event_loop()
         with yt_dlp.YoutubeDL(cls.ydl_format_options) as ydl:
-
-            data = await loop.run_in_executor(None, lambda: ydl.extract_info(url, download=(not stream)))
+            data = await loop.run_in_executor(
+                None, lambda: ydl.extract_info(url, download=(not stream))
+            )
 
             if "entries" in data:
                 data = data["entries"][0]
 
             filename = data["url"] if stream else ydl.prepare_filename(data)
-            return cls(discord.FFmpegPCMAudio(filename, **cls.ffmpeg_options), data=data, filename=filename)
+            return cls(
+                discord.FFmpegPCMAudio(filename, **cls.ffmpeg_options),
+                data=data,
+                filename=filename,
+            )
 
 
 class KoBot(commands.Cog):
@@ -69,11 +74,9 @@ class KoBot(commands.Cog):
         self._vol = 0.5
         self._source = None
 
-
     @property
     def vol(self):
         return self._vol
-
 
     @vol.setter
     def vol(self, val):
@@ -87,19 +90,16 @@ class KoBot(commands.Cog):
         if self.source is not None:
             self.source.volume = self._vol
 
-
     @property
     def source(self):
         return self._source
-
 
     @source.setter
     def source(self, val):
         self._source = val
 
         self._source.volume = self._vol
- 
-  
+
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def join(self, ctx, *, channel: discord.VoiceChannel | None = None):
@@ -114,15 +114,15 @@ class KoBot(commands.Cog):
 
         await channel.connect()
 
-
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def play(self, ctx, *, query):
         self.source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
-        ctx.voice_client.play(self.source, after=lambda e: print(f"Player error: {e}") if e else None)
+        ctx.voice_client.play(
+            self.source, after=lambda e: print(f"Player error: {e}") if e else None
+        )
 
         await ctx.send(f"Now playing: {query}")
-
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -130,20 +130,22 @@ class KoBot(commands.Cog):
         async with ctx.typing():
             self.source = await YDLSource.from_url(url, loop=self.bot.loop)
             self.files.append(self.source.filename)
-            ctx.voice_client.play(self.source, after=lambda e: print(f"Player error: {e}") if e else None)
+            ctx.voice_client.play(
+                self.source, after=lambda e: print(f"Player error: {e}") if e else None
+            )
 
             await ctx.send(f"Now playing: {self.source.title}")
-
 
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def stream(self, ctx, *, url):
         async with ctx.typing():
             self.source = await YDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(self.source, after=lambda e: print(f"Player error: {e}") if e else None)
+            ctx.voice_client.play(
+                self.source, after=lambda e: print(f"Player error: {e}") if e else None
+            )
 
         await ctx.send(f"Now playing: {self.source.title}")
-
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -162,7 +164,6 @@ class KoBot(commands.Cog):
 
         await ctx.voice_client.disconnect()
 
-
     @commands.command(aliases=["vol", "v"])
     @commands.has_permissions(administrator=True)
     async def volume(self, ctx, *, val=None):
@@ -176,13 +177,11 @@ class KoBot(commands.Cog):
         else:
             return await ctx.send(f"Volume is {int(float(self.vol) * 100)}%")
 
-
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def mute(self, ctx):
         self.vol = 0
-        return await ctx.send(f"Volume muted")
-
+        return await ctx.send("Volume muted")
 
     @play.before_invoke
     @yt.before_invoke
@@ -196,7 +195,6 @@ class KoBot(commands.Cog):
         elif ctx.voice_client.is_playing():
             ctx.voice_client.stop()
 
-
     @yt.after_invoke
     async def remove_file(self, ctx):
         for f in self.files:
@@ -207,10 +205,10 @@ class KoBot(commands.Cog):
                 print(f"Error removing file {f}:")
                 print(f"{e}\n")
 
-
-    @commands.command(aliases=["rr", "regr", "rroll", "regroll", "regularroll", "reg_roll"])
+    @commands.command(
+        aliases=["rr", "regr", "rroll", "regroll", "regularroll", "reg_roll"]
+    )
     async def regular_roll(self, ctx, *args):
-
         times = 1
         sides = 20
         mods = []
@@ -220,7 +218,7 @@ class KoBot(commands.Cog):
             mods_re = re.compile(r"[+-]\d+")
             mods = mods_re.findall(args)
             for m in mods:
-                args = args[:args.find(m)] + args[args.find(m) + len(m):]
+                args = args[: args.find(m)] + args[args.find(m) + len(m) :]
 
             mods = [int(m) for m in mods]
 
@@ -291,10 +289,19 @@ class KoBot(commands.Cog):
             await asyncio.sleep(0.1)
         await msg.edit(content=result)
 
-
-    @commands.command(aliases=["r", "kr", "knavesr", "kroll", "knavesroll", "knavroll", "k_roll", "roll"])
+    @commands.command(
+        aliases=[
+            "r",
+            "kr",
+            "knavesr",
+            "kroll",
+            "knavesroll",
+            "knavroll",
+            "k_roll",
+            "roll",
+        ]
+    )
     async def knaves_roll(self, ctx, *args):
-
         times = 2
         sides = 6
         fort = []
@@ -306,14 +313,14 @@ class KoBot(commands.Cog):
             mods_re = re.compile(r"[+-]\d+")
             mods = mods_re.findall(args)
             for m in mods:
-                args = args[:args.find(m)] + args[args.find(m) + len(m):]
+                args = args[: args.find(m)] + args[args.find(m) + len(m) :]
 
             mods = [int(m) for m in mods]
 
             fort_re = re.compile(r"\d+[Ff][a-zA-Z]*")
             fort = fort_re.findall(args)
             for f in fort:
-                args = args[:args.find(f)] + args[args.find(f) + len(f):]
+                args = args[: args.find(f)] + args[args.find(f) + len(f) :]
 
             fort_num_re = re.compile(r"\d+")
             fort = [int(fort_num_re.match(f).group()) for f in fort]
@@ -321,7 +328,7 @@ class KoBot(commands.Cog):
             mis_re = re.compile(r"\d+[Mm][a-zA-Z]*")
             mis = mis_re.findall(args)
             for m in mis:
-                args = args[:args.find(m)] + args[args.find(m) + len(m):]
+                args = args[: args.find(m)] + args[args.find(m) + len(m) :]
 
             mis_num_re = re.compile(r"\d+")
             mis = [int(mis_num_re.match(m).group()) for m in mis]
@@ -394,7 +401,9 @@ class KoBot(commands.Cog):
                 result += f"\n**{str(adv_number).strip()}. {adv_name.strip()}:\n**{adv_text.strip()}"
                 for _ in range(2):
                     number, name, text = self._quirk()
-                    result += f"\n**{str(number).strip()}. {name.strip()}:** {text.strip()}"
+                    result += (
+                        f"\n**{str(number).strip()}. {name.strip()}:** {text.strip()}"
+                    )
 
             else:
                 number, name, text = self._quirk()
@@ -411,7 +420,6 @@ class KoBot(commands.Cog):
             await asyncio.sleep(0.1)
         await msg.edit(content=result)
 
-
     @commands.command(aliases=["f", "froll", "fort", "fortune", "fortuneroll"])
     async def fortune_roll(self, ctx, *args):
         if args:
@@ -419,7 +427,7 @@ class KoBot(commands.Cog):
             mods_re = re.compile(r"[+-]\d+")
             mods = mods_re.findall(args)
             for m in mods:
-                args = args[:args.find(m)] + args[args.find(m) + len(m):]
+                args = args[: args.find(m)] + args[args.find(m) + len(m) :]
 
             fort_re = re.compile(r"\d+")
             num_fort = fort_re.match(args).group()
@@ -436,7 +444,6 @@ class KoBot(commands.Cog):
         else:
             return await self.knaves_roll(ctx, "1f")
 
-
     @commands.command(aliases=["m", "mroll", "mis", "misfortune", "misfortuneroll"])
     async def misfortune_roll(self, ctx, *args):
         if args:
@@ -444,7 +451,7 @@ class KoBot(commands.Cog):
             mods_re = re.compile(r"[+-]\d+")
             mods = mods_re.findall(args)
             for m in mods:
-                args = args[:args.find(m)] + args[args.find(m) + len(m):]
+                args = args[: args.find(m)] + args[args.find(m) + len(m) :]
 
             fort_re = re.compile(r"\d+")
             num_fort = fort_re.match(args).group()
@@ -461,10 +468,8 @@ class KoBot(commands.Cog):
         else:
             return await self.knaves_roll(ctx, "1m")
 
-
     @commands.command(aliases=["q"])
     async def quirk(self, ctx, *args):
-
         try:
             number, name, text = self._quirk(args)
         except QuirkNotFoundError as e:
@@ -472,10 +477,13 @@ class KoBot(commands.Cog):
 
         else:
             if number.isdigit():
-                return await ctx.reply(f"**{str(number).strip()}. {name.strip()}:** {text.strip()}")
+                return await ctx.reply(
+                    f"**{str(number).strip()}. {name.strip()}:** {text.strip()}"
+                )
             else:
-                return await ctx.reply(f"**{str(number).strip()}. {name.strip()}:**\n{text.strip()}")
-
+                return await ctx.reply(
+                    f"**{str(number).strip()}. {name.strip()}:**\n{text.strip()}"
+                )
 
     def _quirk(self, args=None):
         initial_input = None
@@ -506,22 +514,21 @@ intents.message_content = True
 intents.members = True
 bot: commands.Bot
 bot = commands.Bot(
-        intents=intents,
-        command_prefix=commands.when_mentioned_or("!"),
-        strip_after_prefix=True,
-        case_insensitive=True
-        )
+    intents=intents,
+    command_prefix=commands.when_mentioned_or("!"),
+    strip_after_prefix=True,
+    case_insensitive=True,
+)
 
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity = discord.Game(name = "Knaves of the Oblong Stool"))
+    await bot.change_presence(activity=discord.Game(name="Knaves of the Oblong Stool"))
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
     print("-------------------------------------------")
 
 
 async def main():
-
     discord.utils.setup_logging(level=logging.INFO, root=False)
 
     fp: TextIO
