@@ -2,7 +2,6 @@ from __future__ import annotations
 import discord
 from discord.ext import commands
 import asyncio
-from typing import TextIO
 import yt_dlp
 import logging
 import random
@@ -102,7 +101,7 @@ class KoBot(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def join(self, ctx, *, channel: discord.VoiceChannel | None = None):
+    async def join(self, ctx, *, channel=None):
         """Joins a voice channel"""
 
         if channel is None:
@@ -512,7 +511,6 @@ class KoBot(commands.Cog):
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
-bot: commands.Bot
 bot = commands.Bot(
     intents=intents,
     command_prefix=commands.when_mentioned_or("!"),
@@ -531,7 +529,6 @@ async def on_ready():
 async def main():
     discord.utils.setup_logging(level=logging.INFO, root=False)
 
-    fp: TextIO
     with open("quirks.toml", "rb") as fp:
         quirks = tomllib.load(fp)
 
