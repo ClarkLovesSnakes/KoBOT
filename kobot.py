@@ -79,7 +79,7 @@ class KoBot(commands.Cog):
     def vol(self, val):
         val = int(val)
         if not isinstance(val, int) or val > 100 or val < 0:
-            raise Exception("Volume must be a float between 0 and 1")
+            raise Exception("Volume must be an integer between 0 and 100")
 
         val /= 100
         self._vol = val
@@ -280,7 +280,16 @@ class KoBot(commands.Cog):
         else:
             result = f"**{result}**"
 
-        await ctx.reply(result)
+        msg = None
+        for _ in range(5):
+            rand = [str(random.randint(1, sides)) for __ in range(times)]
+            if msg is None:
+                msg = await ctx.reply(" + ".join(rand))
+            else:
+                msg = await msg.edit(content=" + ".join(rand))
+
+            await asyncio.sleep(0.1)
+        await msg.edit(content=result)
 
 
     @commands.command(aliases=["r", "kr", "knavesr", "kroll", "knavesroll", "knavroll", "k_roll", "roll"])
@@ -301,7 +310,7 @@ class KoBot(commands.Cog):
 
             mods = [int(m) for m in mods]
 
-            fort_re = re.compile(r"\d+f[a-zA-Z]*")
+            fort_re = re.compile(r"\d+[Ff][a-zA-Z]*")
             fort = fort_re.findall(args)
             for f in fort:
                 args = args[:args.find(f)] + args[args.find(f) + len(f):]
@@ -309,7 +318,7 @@ class KoBot(commands.Cog):
             fort_num_re = re.compile(r"\d+")
             fort = [int(fort_num_re.match(f).group()) for f in fort]
 
-            mis_re = re.compile(r"\d+m[a-zA-Z]*")
+            mis_re = re.compile(r"\d+[Mm][a-zA-Z]*")
             mis = mis_re.findall(args)
             for m in mis:
                 args = args[:args.find(m)] + args[args.find(m) + len(m):]
@@ -391,7 +400,16 @@ class KoBot(commands.Cog):
                 number, name, text = self._quirk()
                 result += f"\n**{str(number).strip()}. {name.strip()}:** {text.strip()}"
 
-        await ctx.reply(result)
+        msg = None
+        for _ in range(5):
+            rand = [str(random.randint(1, sides)) for __ in range(times)]
+            if msg is None:
+                msg = await ctx.reply(" + ".join(rand))
+            else:
+                msg = await msg.edit(content=" + ".join(rand))
+
+            await asyncio.sleep(0.1)
+        await msg.edit(content=result)
 
 
     @commands.command(aliases=["f", "froll", "fort", "fortune", "fortuneroll"])
